@@ -31,7 +31,7 @@ npm i uuid
 <!> command can't execute :: npm i type-graphql-query
 
 #mongodb connection
-MongooseModule.forRoot('mongodb+srv://admin0523mongodbnestjs01:qpgzImPQGpRUvvPM@cluster0.f2jgdfl.mongodb.net/nestjs-demo?retryWrites=true&w=majority'), 
+MongooseModule.forRoot('mongodb+srv://<username>:<password>@cluster0.f2jgdfl.mongodb.net/nestjs-demo?retryWrites=true&w=majority'), 
 
 #graphql connection
 GraphQLModule.forRoot<ApolloDriverConfig>({
