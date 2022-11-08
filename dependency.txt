@@ -46,3 +46,19 @@ npm i @types/passport-jwt
 
 npm i bcrypt jsonwebtoken nanoid cookie-parser
 npm i @types/jsonwebtoken @types/nanoid @types/cookie-parser -D
+
+
+#setup
+npm i @nestjs/mongoose mongoose
+npm install --save-dev @types/mongoose
+
+npm i @nestjs/graphql @nestjs/apollo graphql apollo-server-express
+npm i @nestjs/graphql @nestjs/apollo graphql-tools graphql apollo-server-express
+
+npm i class-validator
+
+npm i @nestjs/passport passport passport-local
+npm i @nestjs/jwt passport-jwt
+npm i @types/passport-jwt
+
+npm i bcrypt 
