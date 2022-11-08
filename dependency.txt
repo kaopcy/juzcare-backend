@@ -62,3 +62,5 @@ npm i @nestjs/jwt passport-jwt
 npm i @types/passport-jwt
 
 npm i bcrypt 
+
+npm i --save @nestjs/config
