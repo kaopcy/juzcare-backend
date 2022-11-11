@@ -1,3 +1,4 @@
+import { NotAcceptableException } from "@nestjs/common";
 import { Field, ID, ObjectType } from "@nestjs/graphql";
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { Document } from "mongoose";
@@ -8,7 +9,7 @@ export class User {
     @Field(() => ID)
     _id: string
 
-    @Prop({ type: String, required: [true, 'String'], unique: true })
+    @Prop({ type: String, required: [true, 'String'], unique: [true] })
     @Field()
     email: string
 
@@ -55,7 +56,7 @@ export class User {
 export const UserSchema = SchemaFactory.createForClass(User)
 .post('save', function (error, doc, next) {
     if (error.name === 'MongoServerError' && error.code === 11000) {
-        next(new Error('email must be unique'));
+        next(new NotAcceptableException('email must be unique'));
     } else {
         next(error);
     }

@@ -22,26 +22,34 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
-type Query {
-  user(_id: String!): User
-  users(_ids: [String!]!): [User!]
-}
-
-type Mutation {
-  createUser(createUserData: CreateUserInput!): User!
-  updateUser(updateUserData: UpdateUserInput!): User
-  deleteUser(deleteUserData: DeleteUserInput!): User
-}
-
-input CreateUserInput {
+type AuthUser {
+  _id: ID!
   email: String!
   emailType: String!
   username: String!
-  password: String!
+  password: String
   firstName: String!
   lastName: String!
   phone: String!
   role: String!
+  isBanned: Boolean!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  access_token: String!
+}
+
+type Query {
+  user(_id: String!): User
+  users(_ids: [String!]!): [User!]
+  login(email: String!, password: String!): AuthUser!
+  getMe: AuthUser!
+  rePassword(oldPassword: String!, newPassword: String!): AuthUser!
+}
+
+type Mutation {
+  updateUser(updateUserData: UpdateUserInput!): User
+  register(registerData: CreateUserInput!): AuthUser!
+  deleteUser: User!
 }
 
 input UpdateUserInput {
@@ -56,6 +64,13 @@ input UpdateUserInput {
   isBannned: Boolean
 }
 
-input DeleteUserInput {
-  _id: String!
+input CreateUserInput {
+  email: String!
+  emailType: String!
+  username: String!
+  password: String!
+  firstName: String!
+  lastName: String!
+  phone: String!
+  role: String!
 }
