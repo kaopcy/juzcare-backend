@@ -30,7 +30,7 @@ export class AuthUserService {
         if (!user) {
             throw new NotFoundException('email or password incorrect')
         }
-        return await this.createAuthUser(user)
+        return this.createAuthUser(user)
     }
 
     public async verify(token: string): Promise<User | null> {

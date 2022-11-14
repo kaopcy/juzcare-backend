@@ -30,7 +30,7 @@ export class AuthAdminService {
         if (!admin) {
             throw new NotFoundException('email or password incorrect')
         }
-        return await this.createAuthAdmin(admin)
+        return this.createAuthAdmin(admin)
     }
 
     public async verify(token: string): Promise<Admin | null> {
