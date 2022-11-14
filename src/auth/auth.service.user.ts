@@ -10,7 +10,7 @@ import { CreateUserInput } from 'src/users/dto/inputs/create-user.input';
 
 
 @Injectable()
-export class AuthService {
+export class AuthUserService {
     constructor(
         private readonly usersService: UsersService,
         private readonly jwtService: JwtService,
@@ -46,6 +46,9 @@ export class AuthService {
 
     public async getMe(email: string): Promise<AuthUser | null> {
         const user = await this.usersService.getUserByEmail(email)
+        if (! user) {
+            throw new NotFoundException('not found user by email')
+        }
         return this.createAuthUser(user)
     }
 

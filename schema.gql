@@ -22,6 +22,27 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type Admin {
+  _id: ID!
+  email: String!
+  password: String
+  firstName: String!
+  lastName: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type AuthAdmin {
+  _id: ID!
+  email: String!
+  password: String
+  firstName: String!
+  lastName: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  access_token: String!
+}
+
 type AuthUser {
   _id: ID!
   email: String!
@@ -41,15 +62,20 @@ type AuthUser {
 type Query {
   user(_id: String!): User
   users(_ids: [String!]!): [User!]
-  login(email: String!, password: String!): AuthUser!
-  getMe: AuthUser!
-  rePassword(oldPassword: String!, newPassword: String!): AuthUser!
+  loginUser(email: String!, password: String!): AuthUser!
+  getMeUser: AuthUser!
+  rePasswordUser(oldPassword: String!, newPassword: String!): AuthUser!
+  loginAdmin(email: String!, password: String!): AuthAdmin!
+  getMeAdmin: AuthAdmin!
+  admin(_id: String!): Admin
 }
 
 type Mutation {
   updateUser(updateUserData: UpdateUserInput!): User
-  register(registerData: CreateUserInput!): AuthUser!
+  registerUser(registerData: CreateUserInput!): AuthUser!
   deleteUser: User!
+  registerAdmin(registerData: CreateAdminInput!): AuthAdmin!
+  deleteAdmin: User!
 }
 
 input UpdateUserInput {
@@ -73,4 +99,12 @@ input CreateUserInput {
   lastName: String!
   phone: String!
   role: String!
+}
+
+input CreateAdminInput {
+  email: String!
+  username: String!
+  password: String!
+  firstName: String!
+  lastName: String!
 }
