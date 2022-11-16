@@ -56,7 +56,7 @@ export class AdminsService {
         return admin
     }
 
-    private async verifyAdminRole(_id: string) {
+    public async verifyAdminRole(_id: string) {
         const admin = await this.findById(_id)
         if (! admin) {
             throw new NotFoundException('Only admin role.')
