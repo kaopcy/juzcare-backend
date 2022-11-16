@@ -74,6 +74,15 @@ type Media {
   updatedAt: DateTime!
 }
 
+type Progress {
+  _id: String!
+  user: User!
+  detail: String!
+  imageUrls: [String!]!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
 type Tag {
   _id: ID!
   name: String!
@@ -99,6 +108,7 @@ type Report {
   upVotes: [User!]
   medias: [Media!]
   comments: [Comment!]
+  progresses: [Progress!]
   tags: [Tag!]
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -129,6 +139,7 @@ type Mutation {
   deleteAdmin: User!
   createReport(createReportData: CreateReportInput!): Report!
   createCommentReport(createCommentReportData: CreateCommentInput!): Report!
+  createProgressReport(createProgressReportData: CreateProgressInput!): Report!
   upVoteReport(_id: String!): Report!
   createLocation(locationData: CreateLocationInput!): Location!
   updateStatus(updateTagData: UpdateTagInput!): Tag!
@@ -181,6 +192,12 @@ input CreateMediaInput {
 input CreateCommentInput {
   reportId: String!
   body: String!
+}
+
+input CreateProgressInput {
+  reportId: String!
+  detail: String!
+  imageUrls: [String!]!
 }
 
 input CreateLocationInput {
