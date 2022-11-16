@@ -13,6 +13,7 @@ import { ReportsModule } from './reports/reports.module';
 import { MediasModule } from './medias/medias.module';
 import { LocationsModule } from './locations/locations.module';
 import { TagsModule } from './tags/tags.module';
+import { ProgressesModule } from './progresses/progresses.module';
 
 
 @Module({
@@ -31,6 +32,7 @@ import { TagsModule } from './tags/tags.module';
     MediasModule,
     LocationsModule,
     TagsModule,
+    ProgressesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
