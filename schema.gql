@@ -59,6 +59,51 @@ type AuthUser {
   access_token: String!
 }
 
+type Comment {
+  _id: String!
+  user: User!
+  body: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Media {
+  _id: ID!
+  imageUrl: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Tag {
+  _id: ID!
+  name: String!
+  status: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Location {
+  _id: String!
+  name: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Report {
+  _id: ID!
+  user: User!
+  detail: String!
+  title: String!
+  locationDetail: String!
+  location: Location
+  upVotes: [User!]
+  medias: [Media!]
+  comments: [Comment!]
+  tags: [Tag!]
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
 type Query {
   user(_id: String!): User
   users(_ids: [String!]!): [User!]
@@ -68,6 +113,12 @@ type Query {
   loginAdmin(email: String!, password: String!): AuthAdmin!
   getMeAdmin: AuthAdmin!
   admin(_id: String!): Admin
+  report(_id: String!): Report
+  reports: [Report!]
+  location(_id: [String!]!): Location!
+  getAllLocations: [Location!]!
+  getVerifiedTags: [Tag!]!
+  getAllTags: [Tag!]!
 }
 
 type Mutation {
@@ -76,6 +127,11 @@ type Mutation {
   deleteUser: User!
   registerAdmin(registerData: CreateAdminInput!): AuthAdmin!
   deleteAdmin: User!
+  createReport(createReportData: CreateReportInput!): Report!
+  createCommentReport(createCommentReportData: CreateCommentInput!): Report!
+  upVoteReport(_id: String!): Report!
+  createLocation(locationData: CreateLocationInput!): Location!
+  updateStatus(updateTagData: UpdateTagInput!): Tag!
 }
 
 input UpdateUserInput {
@@ -107,4 +163,31 @@ input CreateAdminInput {
   password: String!
   firstName: String!
   lastName: String!
+}
+
+input CreateReportInput {
+  detail: String!
+  title: String!
+  locationDetail: String!
+  location: String!
+  tags: [String!]
+  medias: [CreateMediaInput!]
+}
+
+input CreateMediaInput {
+  imageUrl: String!
+}
+
+input CreateCommentInput {
+  reportId: String!
+  body: String!
+}
+
+input CreateLocationInput {
+  name: String!
+}
+
+input UpdateTagInput {
+  _id: String!
+  status: String!
 }
