@@ -74,7 +74,7 @@ export class UsersService {
         return this.updateUser(user)
     }
 
-    private async findById(_id: string): Promise<User> {
+    public async findById(_id: string): Promise<User> {
         let user: User
         try {
             user = await this.userModel.findById(_id).exec()
