@@ -8,6 +8,11 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { AdminsModule } from './admins/admins.module';
+import { CommentsModule } from './comments/comments.module';
+import { ReportsModule } from './reports/reports.module';
+import { MediasModule } from './medias/medias.module';
+import { LocationsModule } from './locations/locations.module';
+import { TagsModule } from './tags/tags.module';
 
 
 @Module({
@@ -21,6 +26,11 @@ import { AdminsModule } from './admins/admins.module';
     UsersModule,
     AuthModule,
     AdminsModule,
+    CommentsModule,
+    ReportsModule,
+    MediasModule,
+    LocationsModule,
+    TagsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
