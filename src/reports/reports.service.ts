@@ -4,6 +4,8 @@ import mongoose, { Model } from 'mongoose';
 import { CommentsService } from 'src/comments/comments.service';
 import { CreateCommentInput } from 'src/comments/dto/inputs/create-comment.input';
 import { MediasService } from 'src/medias/medias.service';
+import { CreateProgressInput } from 'src/progresses/dto/inputs/create-progress.input';
+import { ProgressesService } from 'src/progresses/progresses.service';
 import { TagsService } from 'src/tags/tags.service';
 import { User } from 'src/users/models/user';
 import { CreateReportInput } from './dto/inputs/create-report.input';
@@ -16,6 +18,8 @@ export class ReportsService {
         private readonly mediasService: MediasService,
         private readonly commentsService: CommentsService,
         private readonly tagsService: TagsService,
+        private readonly progressesService: ProgressesService,
+
     ) { }
 
     async createReport(user: User, reportData: CreateReportInput): Promise<Report> {
@@ -84,6 +88,16 @@ export class ReportsService {
         const comment = await this.commentsService.createComment({ user: user, body: commentData.body })
         await this.reportModel.findByIdAndUpdate(commentData.reportId, { $push: { comments: comment._id }, new: true })
         return await this.findByReportId(commentData.reportId)
+    }
+
+    async addProgress(user: User, progressData: CreateProgressInput): Promise<Report> {
+        const report = await this.findByReportId(progressData.reportId)
+        if (!report) {
+            throw new NotFoundException('report id not found')
+        }
+        const progress = await this.progressesService.createProgress({ user: user, detail: progressData.detail, imageUrls: progressData.imageUrls })
+        await this.reportModel.findByIdAndUpdate(progressData.reportId, { $push: { comments: progress._id }, new: true })
+        return await this.findByReportId(progressData.reportId)
     }
 
     async findByReportId(id: string) {

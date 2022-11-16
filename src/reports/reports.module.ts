@@ -13,6 +13,8 @@ import { Location, LocationSchema } from 'src/locations/models/location';
 import { LocationsService } from 'src/locations/locations.service';
 import { Tag, TagSchema } from 'src/tags/models/tag';
 import { TagsService } from 'src/tags/tags.service';
+import { Progress, ProgressSchema } from 'src/progresses/models/progress';
+import { ProgressesService } from 'src/progresses/progresses.service';
 
 @Module({
   imports:
@@ -24,8 +26,9 @@ import { TagsService } from 'src/tags/tags.service';
       { name: Comment.name, schema: CommentSchema },
       { name: Location.name, schema: LocationSchema },
       { name: Tag.name, schema: TagSchema },
+      { name: Progress.name, schema: ProgressSchema },
     ]),
   ],
-  providers: [ReportsService, ReportsResolver, UsersService, MediasService, CommentsService, LocationsService, TagsService]
+  providers: [ReportsService, ReportsResolver, UsersService, MediasService, CommentsService, LocationsService, TagsService, ProgressesService]
 })
 export class ReportsModule {}

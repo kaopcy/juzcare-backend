@@ -5,6 +5,7 @@ import mongoose, { Document } from "mongoose";
 import { Comment } from "src/comments/models/comment";
 import { Location } from "src/locations/models/location";
 import { Media } from "src/medias/models/media";
+import { Progress } from "src/progresses/models/progress";
 import { Tag } from "src/tags/models/tag";
 import { User } from "src/users/models/user";
 
@@ -45,6 +46,10 @@ export class Report {
     @Prop([{ type: mongoose.Schema.Types.ObjectId, ref: Comment.name }])
     @Field(() => [Comment], { nullable: true })
     comments: Comment[]
+
+    @Prop([{ type: mongoose.Schema.Types.ObjectId, ref: Progress.name }])
+    @Field(() => [Progress], { nullable: true })
+    progresses: Progress[]
 
     @Prop([{ type: mongoose.Schema.Types.ObjectId, ref: Tag.name }])
     @Field(() => [Tag], { nullable: true })

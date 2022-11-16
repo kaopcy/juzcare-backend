@@ -8,6 +8,9 @@ import { Comment } from 'src/comments/models/comment';
 import { LocationsService } from 'src/locations/locations.service';
 import { MediasService } from 'src/medias/medias.service';
 import { Media } from 'src/medias/models/media';
+import { CreateProgressInput } from 'src/progresses/dto/inputs/create-progress.input';
+import { Progress } from 'src/progresses/models/progress';
+import { ProgressesService } from 'src/progresses/progresses.service';
 import { Tag } from 'src/tags/models/tag';
 import { TagsService } from 'src/tags/tags.service';
 import { User } from 'src/users/models/user';
@@ -26,6 +29,7 @@ export class ReportsResolver {
         private readonly commentsService: CommentsService,
         private readonly locationsService: LocationsService,
         private readonly tagsService: TagsService,
+        private readonly progressesService: ProgressesService,
         
         ) { }
 
@@ -54,6 +58,12 @@ export class ReportsResolver {
         return this.reportsService.addComment(user, commentData)
     }
 
+    @Mutation(() => Report)
+    @UseGuards(GqlAuthGuard)
+    async createProgressReport(@CurrentUser() user: User, @Args('createProgressReportData') progressData: CreateProgressInput): Promise<Report>{
+        return this.reportsService.addProgress(user, progressData)
+    }
+
     @ResolveField(() => User, { nullable: true })
     async user(@Parent() report: Report) {
         return this.usersService.findById(report.user._id)
@@ -77,6 +87,11 @@ export class ReportsResolver {
     @ResolveField(() => [Comment], {nullable: true})
     async comments(@Parent() report: Report) {
         return this.commentsService.getComments({_ids: report.comments.map((c)=>c._id.toString())})
+    }
+
+    @ResolveField(() => [Progress], {nullable: true})
+    async progresses(@Parent() report: Report) {
+        return this.progressesService.getProgresses({_ids: report.comments.map((c)=>c._id.toString())})
     }
 
     @ResolveField(() => Tag, {nullable: true})
