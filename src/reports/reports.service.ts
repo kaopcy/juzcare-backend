@@ -95,7 +95,7 @@ export class ReportsService {
         if (!report) {
             throw new NotFoundException('report id not found')
         }
-        const progress = await this.progressesService.createProgress({ user: user, detail: progressData.detail, imageUrls: progressData.imageUrls })
+        const progress = await this.progressesService.createProgress(user, progressData)
         await this.reportModel.findByIdAndUpdate(progressData.reportId, { $push: { comments: progress._id }, new: true })
         return await this.findByReportId(progressData.reportId)
     }
