@@ -12,7 +12,7 @@ import * as bcrypt from 'bcrypt';
 @Injectable()
 export class UsersService {
     constructor(
-        @InjectModel(User.name) private readonly userModel: Model<UserDocument>
+        @InjectModel(User.name) private readonly userModel: Model<UserDocument>,
     ) { }
 
     public async createUser(createUserData: CreateUserInput): Promise<User> {
@@ -85,6 +85,10 @@ export class UsersService {
             return null
         }
         return user
+    }
+
+    public async updateAvatarUser(user: User, avatarUrl: string): Promise<User> {
+        return await this.userModel.findByIdAndUpdate(user._id, {avatar: avatarUrl}, {new: true})
     }
 
 }
