@@ -7,6 +7,8 @@ import { LoginAuthArgs } from './dto/args/login-auth.args';
 import { AuthUser } from './models/authuser';
 import { RePasswordAuthArgs } from "./dto/args/repassword-auth.args";
 import { CreateUserInput } from 'src/users/dto/inputs/create-user.input';
+import { AvatarsService } from 'src/avatars/avatars.service';
+import { Avatar } from 'src/avatars/models/avatar';
 
 
 @Injectable()
@@ -14,6 +16,7 @@ export class AuthUserService {
     constructor(
         private readonly usersService: UsersService,
         private readonly jwtService: JwtService,
+        private readonly avatarsService: AvatarsService,
     ) { }
 
     public async validate(email: string, password: string): Promise<User | null> {
@@ -53,8 +56,10 @@ export class AuthUserService {
     }
 
     public async register(createUserData: CreateUserInput): Promise<AuthUser | null> {
+        const avatar = await this.getRandomAvatar()
         const user = await this.usersService.createUser(createUserData)
-        return this.createAuthUser(user)
+        const update_avatar_user = await this.usersService.updateAvatarUser(user, avatar._id.toString())
+        return await this.createAuthUser(update_avatar_user)
     }
 
     public async rePassword(user: User, rePasswordAuthArgs: RePasswordAuthArgs): Promise<AuthUser | null> {
@@ -75,5 +80,11 @@ export class AuthUserService {
     private createAuthUser(user: User): Promise<AuthUser | null> {
         const access_token = this.generateToken(user)
         return { ...({ ...user }['_doc']), access_token }
+    }
+
+    private async getRandomAvatar(): Promise<Avatar> {
+        const avatars = await this.avatarsService.getAllAvatars()
+        const avatar = avatars[Math.floor(Math.random()*avatars.length)]
+        return avatar 
     }
 }
