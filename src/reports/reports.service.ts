@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import mongoose, { Model } from 'mongoose';
+import { Admin } from 'src/admins/models/admin';
 import { CommentsService } from 'src/comments/comments.service';
 import { CreateCommentInput } from 'src/comments/dto/inputs/create-comment.input';
 import { MediasService } from 'src/medias/medias.service';
@@ -9,6 +10,7 @@ import { ProgressesService } from 'src/progresses/progresses.service';
 import { TagsService } from 'src/tags/tags.service';
 import { User } from 'src/users/models/user';
 import { CreateReportInput } from './dto/inputs/create-report.input';
+import { UpdateStatusReportInput } from './dto/inputs/update-status.report';
 import { Report, ReportDocument } from './models/report';
 
 @Injectable()
@@ -59,8 +61,7 @@ export class ReportsService {
             }
             reportData.tags = _tags
         }
-
-        const _report = { ...{ user: user._id.toString() }, ...reportData }
+        const _report = { ...{ user: user._id.toString() }, ...reportData, status: {} }
         const report = await this.reportModel.create(_report)
         return report
     }
@@ -98,6 +99,11 @@ export class ReportsService {
         const progress = await this.progressesService.createProgress(user, progressData)
         await this.reportModel.findByIdAndUpdate(progressData.reportId, { $push: { comments: progress._id }, new: true })
         return await this.findByReportId(progressData.reportId)
+    }
+
+    async updateStatusReport(admin: Admin, updateStatusData: UpdateStatusReportInput): Promise<Report> {
+        const report = await this.reportModel.findByIdAndUpdate(updateStatusData.reportId, { status: { admin: admin._id.toString(), type: updateStatusData.type } }, {new: true})
+        return report
     }
 
     async findByReportId(id: string) {

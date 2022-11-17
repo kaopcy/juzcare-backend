@@ -1,5 +1,7 @@
 import { UseGuards } from '@nestjs/common';
 import { Args, Mutation, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
+import { AdminsService } from 'src/admins/admins.service';
+import { Admin } from 'src/admins/models/admin';
 import { CurrentUser } from 'src/auth/current-user.args';
 import { GqlAuthGuard } from 'src/auth/guards/gql-auth.guard';
 import { CommentsService } from 'src/comments/comments.service';
@@ -17,7 +19,9 @@ import { User } from 'src/users/models/user';
 import { UsersService } from 'src/users/users.service';
 import { GetReportArgs } from './dto/args/get-report.args';
 import { CreateReportInput } from './dto/inputs/create-report.input';
+import { UpdateStatusReportInput } from './dto/inputs/update-status.report';
 import { Report } from './models/report';
+import { Status } from './models/status';
 import { ReportsService } from './reports.service';
 
 @Resolver(() => Report)
@@ -30,7 +34,7 @@ export class ReportsResolver {
         private readonly locationsService: LocationsService,
         private readonly tagsService: TagsService,
         private readonly progressesService: ProgressesService,
-        
+        private readonly adminsService: AdminsService,
         ) { }
 
     @Query(() => Report, { nullable: true })
@@ -98,11 +102,32 @@ export class ReportsResolver {
     async tags(@Parent() report: Report) {
         return this.tagsService.getTags({_ids: report.tags.map((t) => t._id.toString())})
     }
+
+    @ResolveField(() => Status, {nullable: true})
+    async status(@Parent() report: Report): Promise<Status> {
+        return report.status
+    }
+    
+    // @ResolveField(() => Admin)
+    // async admin(@Parent() status: Status): Promise<Admin> {
+    //     if (!status.admin) {
+    //         return null
+    //     }
+    //     return this.adminsService.findById(status.admin._id)
+    // }
+
+    @Mutation(() => Report)
+    @UseGuards(GqlAuthGuard)
+    async updateStatusReport(@CurrentUser() admin: Admin, @Args('updateStatusReportData') updateStatusReport: UpdateStatusReportInput): Promise<Report> {
+        await this.adminsService.verifyAdminRole(admin._id.toString())
+        return await this.reportsService.updateStatusReport(admin, updateStatusReport)
+    }
+
     
     @Mutation(() => Report)
     @UseGuards(GqlAuthGuard)
     async upVoteReport(@CurrentUser() user: User, @Args() getReportArgs: GetReportArgs): Promise<Report> {
-        const report = this.reportsService.upVoteReport(user, getReportArgs._id)
+        const report = await this.reportsService.upVoteReport(user, getReportArgs._id)
         return report
     }
 }

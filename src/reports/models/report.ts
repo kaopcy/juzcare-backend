@@ -8,6 +8,7 @@ import { Media } from "src/medias/models/media";
 import { Progress } from "src/progresses/models/progress";
 import { Tag } from "src/tags/models/tag";
 import { User } from "src/users/models/user";
+import { Status, StatusSchema } from "./status";
 
 @Schema({ timestamps: true })
 @ObjectType()
@@ -30,6 +31,10 @@ export class Report {
     @Prop({ type: String, required: [true] })
     @Field()
     locationDetail: string
+
+    @Prop({ type: StatusSchema, required: [true] })
+    @Field(() => Status, {nullable: true})
+    status: Status
 
     @Prop({ type: mongoose.Schema.Types.ObjectId, ref: Location.name })
     @Field(() => Location, { nullable: true })

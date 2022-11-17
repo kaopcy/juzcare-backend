@@ -43,7 +43,7 @@ export class AdminsService {
         return user
     }
 
-    private async findById(_id: string): Promise<Admin> {
+    public async findById(_id: string): Promise<Admin> {
         let admin: Admin
         try {
             admin = await this.adminModel.findById(_id).exec()

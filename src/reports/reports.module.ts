@@ -15,6 +15,9 @@ import { Tag, TagSchema } from 'src/tags/models/tag';
 import { TagsService } from 'src/tags/tags.service';
 import { Progress, ProgressSchema } from 'src/progresses/models/progress';
 import { ProgressesService } from 'src/progresses/progresses.service';
+import { Admin, AdminSchema } from 'src/admins/models/admin';
+import { AdminsService } from 'src/admins/admins.service';
+import { StatusResolver } from './status.resolver';
 
 @Module({
   imports:
@@ -27,8 +30,9 @@ import { ProgressesService } from 'src/progresses/progresses.service';
       { name: Location.name, schema: LocationSchema },
       { name: Tag.name, schema: TagSchema },
       { name: Progress.name, schema: ProgressSchema },
+      { name: Admin.name, schema: AdminSchema },
     ]),
   ],
-  providers: [ReportsService, ReportsResolver, UsersService, MediasService, CommentsService, LocationsService, TagsService, ProgressesService]
+  providers: [ReportsService, ReportsResolver, UsersService, MediasService, CommentsService, LocationsService, TagsService, ProgressesService, AdminsService, StatusResolver]
 })
 export class ReportsModule {}
