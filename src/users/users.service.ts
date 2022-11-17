@@ -87,8 +87,8 @@ export class UsersService {
         return user
     }
 
-    public async updateAvatarUser(user: User, avatarUrl: string): Promise<User> {
-        return await this.userModel.findByIdAndUpdate(user._id, {avatar: avatarUrl}, {new: true})
+    public async updateAvatarUser(user: User, avatarId: string): Promise<User> {
+        return await this.userModel.findByIdAndUpdate(user._id, {avatar: avatarId}, {new: true})
     }
 
 }
