@@ -14,6 +14,7 @@ import { MediasModule } from './medias/medias.module';
 import { LocationsModule } from './locations/locations.module';
 import { TagsModule } from './tags/tags.module';
 import { ProgressesModule } from './progresses/progresses.module';
+import { AvatarsModule } from './avatars/avatars.module';
 
 
 @Module({
@@ -33,6 +34,7 @@ import { ProgressesModule } from './progresses/progresses.module';
     LocationsModule,
     TagsModule,
     ProgressesModule,
+    AvatarsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
