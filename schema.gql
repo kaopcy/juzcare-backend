@@ -2,6 +2,18 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type Avatar {
+  _id: String!
+  avatarUrl: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
 type User {
   _id: ID!
   email: String!
@@ -12,15 +24,11 @@ type User {
   lastName: String!
   phone: String!
   role: String!
+  avatar: Avatar
   isBanned: Boolean!
   createdAt: DateTime!
   updatedAt: DateTime!
 }
-
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
 
 type Admin {
   _id: ID!
@@ -53,6 +61,7 @@ type AuthUser {
   lastName: String!
   phone: String!
   role: String!
+  avatar: Avatar
   isBanned: Boolean!
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -129,10 +138,13 @@ type Query {
   getAllLocations: [Location!]!
   getVerifiedTags: [Tag!]!
   getAllTags: [Tag!]!
+  getAvatar: Avatar!
+  getAllAvatars: [Avatar!]!
 }
 
 type Mutation {
   updateUser(updateUserData: UpdateUserInput!): User
+  updateAvatarUser(updateUserAvatarId: UpdateAvatarUserInput!): User!
   registerUser(registerData: CreateUserInput!): AuthUser!
   deleteUser: User!
   registerAdmin(registerData: CreateAdminInput!): AuthAdmin!
@@ -143,6 +155,7 @@ type Mutation {
   upVoteReport(_id: String!): Report!
   createLocation(locationData: CreateLocationInput!): Location!
   updateStatus(updateTagData: UpdateTagInput!): Tag!
+  createAvatar(createAvatarData: CreateAvatarInput!): Avatar!
 }
 
 input UpdateUserInput {
@@ -155,6 +168,10 @@ input UpdateUserInput {
   phone: String
   role: String
   isBannned: Boolean
+}
+
+input UpdateAvatarUserInput {
+  avatarId: ID!
 }
 
 input CreateUserInput {
@@ -207,4 +224,8 @@ input CreateLocationInput {
 input UpdateTagInput {
   _id: String!
   status: String!
+}
+
+input CreateAvatarInput {
+  avatarUrl: String!
 }
