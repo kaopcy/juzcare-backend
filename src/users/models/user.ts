@@ -1,7 +1,8 @@
 import { NotAcceptableException } from "@nestjs/common";
 import { Field, ID, ObjectType } from "@nestjs/graphql";
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { Document } from "mongoose";
+import mongoose, { Document } from "mongoose";
+import { Avatar } from "src/avatars/models/avatar";
 
 @Schema({ timestamps: true })
 @ObjectType()
@@ -40,6 +41,10 @@ export class User {
     @Prop({ type: String, required: [true, 'String'] })
     @Field()
     role: string
+
+    @Prop({ type: mongoose.Schema.Types.ObjectId, ref: Avatar.name })
+    @Field(() => Avatar, { nullable: true })
+    avatar: Avatar
 
     @Prop({ type: Boolean, required: [true, 'Boolean'], default: false })
     @Field()
