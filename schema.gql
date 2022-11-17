@@ -87,7 +87,7 @@ type Progress {
   _id: String!
   user: User!
   detail: String!
-  imageUrls: [String!]!
+  medias: [Media!]
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -214,7 +214,7 @@ input CreateCommentInput {
 input CreateProgressInput {
   reportId: String!
   detail: String!
-  imageUrls: [String!]!
+  medias: [CreateMediaInput!]
 }
 
 input CreateLocationInput {
