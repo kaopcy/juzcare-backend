@@ -5,7 +5,7 @@ import { Review } from './models/review';
 
 @Resolver(() => Review)
 export class ReviewResolver {
-  constructor(private readonly mediasService: MediasService) {}
+  constructor(private readonly mediasService: MediasService) { }
 
   @ResolveField(() => [Media], { nullable: true })
   async medias(@Parent() review: Review) {

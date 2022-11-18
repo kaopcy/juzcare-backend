@@ -12,7 +12,7 @@ export class NotificationService {
   constructor(
     @InjectModel(Notification.name)
     readonly notificationModel: Model<NotificationDocument>,
-  ) {}
+  ) { }
 
   async createNotification(createNotificationData: CreateNotificationInput) {
     // const { isWatch, userId } = createNotificationData

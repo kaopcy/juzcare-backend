@@ -13,16 +13,16 @@ import { CurrentUser } from 'src/auth/current-user.args';
 export class NotificationResolver {
   constructor(
     private readonly notificationService: NotificationService,
-  ) {}
+  ) { }
 
-//   @Mutation(() => Notification, { nullable: true })
-//   @UseGuards(GqlAuthGuard)
-//   public async createNotification(
-//     @Args('createNotificationData')
-//     createNotificationData: CreateNotificationInput,
-//   ): Promise<Notification> {
-//     return this.notificationService.createNotification(createNotificationData);
-//   }
+  //   @Mutation(() => Notification, { nullable: true })
+  //   @UseGuards(GqlAuthGuard)
+  //   public async createNotification(
+  //     @Args('createNotificationData')
+  //     createNotificationData: CreateNotificationInput,
+  //   ): Promise<Notification> {
+  //     return this.notificationService.createNotification(createNotificationData);
+  //   }
 
   @Mutation(() => Notification, { nullable: true })
   @UseGuards(GqlAuthGuard)
@@ -39,14 +39,14 @@ export class NotificationResolver {
     @Args() getNotificationArgs: GetNotificationArgs,
   ): Promise<Notification> {
     const noti = await this.notificationService.getNotification(getNotificationArgs);
-    await this.notificationService.updateNotification({_id: getNotificationArgs._id})
+    await this.notificationService.updateNotification({ _id: getNotificationArgs._id })
     return noti
   }
 
   @Query(() => [Notification], { nullable: true })
   @UseGuards(GqlAuthGuard)
   public async getNotifications(@CurrentUser() user: User): Promise<Notification[]> {
-    const noti = await this.notificationService.getNotificationByUserId({userId:user._id.toString()});
+    const noti = await this.notificationService.getNotificationByUserId({ userId: user._id.toString() });
     return noti
   }
 }

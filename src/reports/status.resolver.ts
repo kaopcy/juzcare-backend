@@ -7,7 +7,7 @@ import { Status } from './models/status';
 export class StatusResolver {
     constructor(
         private readonly adminsService: AdminsService
-    ) {}
+    ) { }
 
     @ResolveField(() => Admin)
     async admin(@Parent() status: Status) {

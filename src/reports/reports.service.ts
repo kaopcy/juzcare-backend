@@ -17,181 +17,181 @@ import { Report, ReportDocument } from './models/report';
 
 @Injectable()
 export class ReportsService {
-  constructor(
-    @InjectModel(Report.name)
-    private readonly reportModel: Model<ReportDocument>,
-    private readonly mediasService: MediasService,
-    private readonly commentsService: CommentsService,
-    private readonly tagsService: TagsService,
-    private readonly progressesService: ProgressesService,
-    private readonly notificationService: NotificationService,
-  ) {}
+    constructor(
+        @InjectModel(Report.name)
+        private readonly reportModel: Model<ReportDocument>,
+        private readonly mediasService: MediasService,
+        private readonly commentsService: CommentsService,
+        private readonly tagsService: TagsService,
+        private readonly progressesService: ProgressesService,
+        private readonly notificationService: NotificationService,
+    ) { }
 
-  async createReport(
-    user: User,
-    reportData: CreateReportInput,
-  ): Promise<Report> {
-    const _medias = [];
-    if (reportData.medias?.length) {
-      for (const m of reportData.medias) {
-        const media = await this.mediasService.createMedia(m);
-        _medias.push(media._id);
-      }
-    }
-    reportData.medias = _medias;
-
-    const _tags = [];
-
-    if (reportData.tags.length) {
-      for (const tag of reportData.tags) {
-        // console.log(tag, !mongoose.Types.ObjectId.isValid(tag));
-        if (!mongoose.Types.ObjectId.isValid(tag)) {
-          const duplicate_tag = await this.tagsService.getTagByName(tag);
-          let new_tag;
-          if (!duplicate_tag) {
-            new_tag = await this.tagsService.createTag({ name: tag });
-          } else {
-            new_tag = duplicate_tag;
-          }
-          _tags.push(new_tag._id.toString());
-        } else {
-          _tags.push(tag);
+    async createReport(
+        user: User,
+        reportData: CreateReportInput,
+    ): Promise<Report> {
+        const _medias = [];
+        if (reportData.medias?.length) {
+            for (const m of reportData.medias) {
+                const media = await this.mediasService.createMedia(m);
+                _medias.push(media._id);
+            }
         }
-      }
-      reportData.tags = _tags;
+        reportData.medias = _medias;
+
+        const _tags = [];
+
+        if (reportData.tags.length) {
+            for (const tag of reportData.tags) {
+                // console.log(tag, !mongoose.Types.ObjectId.isValid(tag));
+                if (!mongoose.Types.ObjectId.isValid(tag)) {
+                    const duplicate_tag = await this.tagsService.getTagByName(tag);
+                    let new_tag;
+                    if (!duplicate_tag) {
+                        new_tag = await this.tagsService.createTag({ name: tag });
+                    } else {
+                        new_tag = duplicate_tag;
+                    }
+                    _tags.push(new_tag._id.toString());
+                } else {
+                    _tags.push(tag);
+                }
+            }
+            reportData.tags = _tags;
+        }
+
+        const _report = {
+            ...{ user: user._id.toString() },
+            ...reportData,
+            status: {},
+            review: {},
+        };
+        const report = await this.reportModel.create(_report);
+        return report;
     }
 
-    const _report = {
-      ...{ user: user._id.toString() },
-      ...reportData,
-      status: {},
-      review: {},
-    };
-    const report = await this.reportModel.create(_report);
-    return report;
-  }
+    async upVoteReport(user: User, reportId: string): Promise<Report> {
+        const report = await this.findByReportId(reportId);
+        if (!report) {
+            throw new NotFoundException('report id not found');
+        }
+        const isUpVoted = await this.reportModel.find({
+            _id: reportId,
+            upVotes: user._id,
+        });
 
-  async upVoteReport(user: User, reportId: string): Promise<Report> {
-    const report = await this.findByReportId(reportId);
-    if (!report) {
-      throw new NotFoundException('report id not found');
+        if (!isUpVoted.length) {
+            await this.reportModel.findByIdAndUpdate(reportId, {
+                $push: { upVotes: user._id },
+                new: true,
+            });
+            await this.notificationService.createNotification({
+                user,
+                report,
+                type: 'UPVOTE',
+            });
+        } else {
+            await this.reportModel.findByIdAndUpdate(reportId, {
+                $pull: { upVotes: user._id },
+                new: true,
+            });
+            return await this.findByReportId(reportId);
+        }
     }
-    const isUpVoted = await this.reportModel.find({
-      _id: reportId,
-      upVotes: user._id,
-    });
 
-    if (!isUpVoted.length) {
-      await this.reportModel.findByIdAndUpdate(reportId, {
-        $push: { upVotes: user._id },
-        new: true,
-      });
-      await this.notificationService.createNotification({
-        user,
-        report,
-        type: 'UPVOTE',
-      });
-    } else {
-      await this.reportModel.findByIdAndUpdate(reportId, {
-        $pull: { upVotes: user._id },
-        new: true,
-      });
-      return await this.findByReportId(reportId);
+    async addComment(
+        user: User,
+        commentData: CreateCommentInput,
+    ): Promise<Report> {
+        const report = await this.findByReportId(commentData.reportId);
+        if (!report) {
+            throw new NotFoundException('report id not found');
+        }
+        const comment = await this.commentsService.createComment({
+            user: user,
+            body: commentData.body,
+        });
+        await this.reportModel.findByIdAndUpdate(commentData.reportId, {
+            $push: { comments: comment._id },
+            new: true,
+        });
+        await this.notificationService.createNotification({
+            user,
+            report,
+            type: 'COMMENT',
+        });
+        return await this.findByReportId(commentData.reportId);
     }
-  }
 
-  async addComment(
-    user: User,
-    commentData: CreateCommentInput,
-  ): Promise<Report> {
-    const report = await this.findByReportId(commentData.reportId);
-    if (!report) {
-      throw new NotFoundException('report id not found');
+    async updateStatusReport(
+        admin: Admin,
+        updateStatusData: UpdateStatusReportInput,
+    ): Promise<Report> {
+        const report = await this.reportModel.findByIdAndUpdate(
+            updateStatusData.reportId,
+            { status: { admin: admin._id.toString(), type: updateStatusData.type } },
+            { new: true },
+        );
+        return report;
     }
-    const comment = await this.commentsService.createComment({
-      user: user,
-      body: commentData.body,
-    });
-    await this.reportModel.findByIdAndUpdate(commentData.reportId, {
-      $push: { comments: comment._id },
-      new: true,
-    });
-    await this.notificationService.createNotification({
-      user,
-      report,
-      type: 'COMMENT',
-    });
-    return await this.findByReportId(commentData.reportId);
-  }
 
-  async updateStatusReport(
-    admin: Admin,
-    updateStatusData: UpdateStatusReportInput,
-  ): Promise<Report> {
-    const report = await this.reportModel.findByIdAndUpdate(
-      updateStatusData.reportId,
-      { status: { admin: admin._id.toString(), type: updateStatusData.type } },
-      { new: true },
-    );
-    return report;
-  }
-
-  async addProgress(
-    user: User,
-    progressData: CreateProgressInput,
-  ): Promise<Report> {
-    const report = await this.findByReportId(progressData.reportId);
-    if (!report) {
-      throw new NotFoundException('report id not found');
+    async addProgress(
+        user: User,
+        progressData: CreateProgressInput,
+    ): Promise<Report> {
+        const report = await this.findByReportId(progressData.reportId);
+        if (!report) {
+            throw new NotFoundException('report id not found');
+        }
+        const progress = await this.progressesService.createProgress(
+            user,
+            progressData,
+        );
+        await this.reportModel.findByIdAndUpdate(progressData.reportId, {
+            $push: { comments: progress._id },
+            new: true,
+        });
+        return await this.findByReportId(progressData.reportId);
     }
-    const progress = await this.progressesService.createProgress(
-      user,
-      progressData,
-    );
-    await this.reportModel.findByIdAndUpdate(progressData.reportId, {
-      $push: { comments: progress._id },
-      new: true,
-    });
-    return await this.findByReportId(progressData.reportId);
-  }
 
-  async updateReviewReport(
-    user: User,
-    updateReviewData: UpdateReviewReportInput,
-  ): Promise<Report> {
-    const _report = await this.findByReportId(updateReviewData.reportId);
-    if (user._id.toString() !== _report.user._id.toString()) {
-      throw new NotFoundException('Not report owner');
+    async updateReviewReport(
+        user: User,
+        updateReviewData: UpdateReviewReportInput,
+    ): Promise<Report> {
+        const _report = await this.findByReportId(updateReviewData.reportId);
+        if (user._id.toString() !== _report.user._id.toString()) {
+            throw new NotFoundException('Not report owner');
+        }
+        const _medias = [];
+        if (updateReviewData.medias?.length) {
+            for (const m of updateReviewData.medias) {
+                const media = await this.mediasService.createMedia(m);
+                _medias.push(media._id);
+            }
+        }
+        updateReviewData.medias = _medias;
+
+        const report = await this.reportModel.findByIdAndUpdate(
+            updateReviewData.reportId,
+            {
+                review: {
+                    description: updateReviewData.description,
+                    medias: updateReviewData.medias.map((m) => m._id.toString()),
+                    star: updateReviewData.star,
+                },
+            },
+            { new: true },
+        );
+        return report;
     }
-    const _medias = [];
-    if (updateReviewData.medias?.length) {
-      for (const m of updateReviewData.medias) {
-        const media = await this.mediasService.createMedia(m);
-        _medias.push(media._id);
-      }
+
+    async findByReportId(id: string) {
+        return this.reportModel.findById(id);
     }
-    updateReviewData.medias = _medias;
 
-    const report = await this.reportModel.findByIdAndUpdate(
-      updateReviewData.reportId,
-      {
-        review: {
-          description: updateReviewData.description,
-          medias: updateReviewData.medias.map((m) => m._id.toString()),
-          star: updateReviewData.star,
-        },
-      },
-      { new: true },
-    );
-    return report;
-  }
-
-  async findByReportId(id: string) {
-    return this.reportModel.findById(id);
-  }
-
-  async findMany() {
-    // console.log(await this.reportModel.find({tags: {$in: ['6374f1ff57979609f697348d','637491d862a3c98ddac0ab47' ]}}));
-    return this.reportModel.find({});
-  }
+    async findMany() {
+        // console.log(await this.reportModel.find({tags: {$in: ['6374f1ff57979609f697348d','637491d862a3c98ddac0ab47' ]}}));
+        return this.reportModel.find({});
+    }
 }

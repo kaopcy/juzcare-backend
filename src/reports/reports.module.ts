@@ -51,4 +51,4 @@ import { Notification, NotificationSchema } from 'src/notification/models/notifi
     NotificationService,
   ],
 })
-export class ReportsModule {}
+export class ReportsModule { }

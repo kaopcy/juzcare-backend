@@ -1,5 +1,5 @@
 import { NotAcceptableException } from "@nestjs/common";
-import { Field,  ObjectType } from "@nestjs/graphql";
+import { Field, ObjectType } from "@nestjs/graphql";
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import mongoose from "mongoose";
 import { Admin } from "src/admins/models/admin";
@@ -8,7 +8,7 @@ import { Admin } from "src/admins/models/admin";
 @ObjectType()
 export class Status {
     @Prop({ type: mongoose.Schema.Types.ObjectId, ref: Admin.name, default: null })
-    @Field(() => Admin, {nullable: true})
+    @Field(() => Admin, { nullable: true })
     admin?: Admin
 
     @Field()

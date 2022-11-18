@@ -8,12 +8,12 @@ import { AdminsService } from 'src/admins/admins.service';
 
 @Module({
   imports:
-  [
-    MongooseModule.forFeature([
-      { name: Tag.name, schema: TagSchema },
-      { name: Admin.name, schema: AdminSchema },
-    ]),
-  ],
-  providers: [TagsService, TagsResolver, AdminsService, ]
+    [
+      MongooseModule.forFeature([
+        { name: Tag.name, schema: TagSchema },
+        { name: Admin.name, schema: AdminSchema },
+      ]),
+    ],
+  providers: [TagsService, TagsResolver, AdminsService,]
 })
-export class TagsModule {}
+export class TagsModule { }

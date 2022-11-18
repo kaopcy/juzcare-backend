@@ -15,4 +15,4 @@ import { Notification, NotificationSchema } from './models/notifications';
     NotificationResolver,
   ],
 })
-export class NotificationModule {}
+export class NotificationModule { }
