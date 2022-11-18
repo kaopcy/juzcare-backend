@@ -18,10 +18,10 @@ import { ProgressesService } from 'src/progresses/progresses.service';
 import { Admin, AdminSchema } from 'src/admins/models/admin';
 import { AdminsService } from 'src/admins/admins.service';
 import { StatusResolver } from './status.resolver';
+import { ReviewResolver } from './review.resolver';
 
 @Module({
-  imports:
-  [
+  imports: [
     MongooseModule.forFeature([
       { name: Report.name, schema: ReportSchema },
       { name: User.name, schema: UserSchema },
@@ -33,6 +33,18 @@ import { StatusResolver } from './status.resolver';
       { name: Admin.name, schema: AdminSchema },
     ]),
   ],
-  providers: [ReportsService, ReportsResolver, UsersService, MediasService, CommentsService, LocationsService, TagsService, ProgressesService, AdminsService, StatusResolver]
+  providers: [
+    ReportsService,
+    ReportsResolver,
+    UsersService,
+    MediasService,
+    CommentsService,
+    LocationsService,
+    TagsService,
+    ProgressesService,
+    AdminsService,
+    StatusResolver,
+    ReviewResolver,
+  ],
 })
 export class ReportsModule {}

@@ -20,8 +20,10 @@ import { UsersService } from 'src/users/users.service';
 import { GetReportArgs } from './dto/args/get-report.args';
 import { CreateReportInput } from './dto/inputs/create-report.input';
 import { UpdateStatusReportInput } from './dto/inputs/update-status.report';
-import { Report } from './models/report';
 import { Status } from './models/status';
+import { UpdateReviewReportInput } from './dto/inputs/update-review.dto';
+import { Report } from './models/report';
+import { Review } from './models/review';
 import { ReportsService } from './reports.service';
 
 @Resolver(() => Report)
@@ -123,11 +125,21 @@ export class ReportsResolver {
         return await this.reportsService.updateStatusReport(admin, updateStatusReport)
     }
 
+    @ResolveField(() => Review, { nullable: true })
+    async review(@Parent() report: Report): Promise<Review> {
+        return report.review
+    }
     
     @Mutation(() => Report)
     @UseGuards(GqlAuthGuard)
     async upVoteReport(@CurrentUser() user: User, @Args() getReportArgs: GetReportArgs): Promise<Report> {
         const report = await this.reportsService.upVoteReport(user, getReportArgs._id)
         return report
+    }
+
+    @Mutation(() => Report)
+    @UseGuards(GqlAuthGuard)
+    async updateReviewReport(@CurrentUser() user: User, @Args('updateReviewReportData') updateReviewReport: UpdateReviewReportInput): Promise<Report> {
+        return await this.reportsService.updateReviewReport(user, updateReviewReport)
     }
 }

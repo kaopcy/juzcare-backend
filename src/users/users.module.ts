@@ -16,4 +16,4 @@ import { Avatar, AvatarSchema } from 'src/avatars/models/avatar';
   ],
   providers: [UsersService, UsersResolver, JwtService, AvatarsService]
 })
-export class UsersModule { }
+export class UsersModule {}

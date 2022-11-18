@@ -112,6 +112,13 @@ type Status {
   type: String!
 }
 
+type Review {
+  description: String
+  medias: [Media!]
+  star: Float
+  createdAt: DateTime!
+}
+
 type Report {
   _id: ID!
   user: User!
@@ -125,6 +132,7 @@ type Report {
   comments: [Comment!]
   progresses: [Progress!]
   tags: [Tag!]
+  review: Review
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -160,6 +168,7 @@ type Mutation {
   createProgressReport(createProgressReportData: CreateProgressInput!): Report!
   updateStatusReport(updateStatusReportData: UpdateStatusReportInput!): Report!
   upVoteReport(_id: String!): Report!
+  updateReviewReport(updateReviewReportData: UpdateReviewReportInput!): Report!
   createLocation(locationData: CreateLocationInput!): Location!
   updateStatus(updateTagData: UpdateTagInput!): Tag!
   createAvatar(createAvatarData: CreateAvatarInput!): Avatar!
@@ -227,6 +236,13 @@ input CreateProgressInput {
 input UpdateStatusReportInput {
   reportId: String!
   type: String!
+}
+
+input UpdateReviewReportInput {
+  reportId: String!
+  description: String!
+  medias: [CreateMediaInput!]
+  star: Float!
 }
 
 input CreateLocationInput {
