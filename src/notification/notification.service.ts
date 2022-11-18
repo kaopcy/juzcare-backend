@@ -43,7 +43,7 @@ export class NotificationService {
       detail: _detail,
       type: createNotificationData.type,
     };
-    const noti = await this.notificationModel.create(_noti);
+    await this.notificationModel.create(_noti);
     return;
   }
 
