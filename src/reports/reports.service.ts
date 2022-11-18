@@ -14,6 +14,7 @@ import { CreateReportInput } from './dto/inputs/create-report.input';
 import { UpdateStatusReportInput } from './dto/inputs/update-status.report';
 import { UpdateReviewReportInput } from './dto/inputs/update-review.dto';
 import { Report, ReportDocument } from './models/report';
+import { TrendsService } from 'src/trends/trends.service';
 
 @Injectable()
 export class ReportsService {
@@ -25,12 +26,10 @@ export class ReportsService {
         private readonly tagsService: TagsService,
         private readonly progressesService: ProgressesService,
         private readonly notificationService: NotificationService,
-    ) { }
+        private readonly trendsService: TrendsService,
+        ) { }
 
-    async createReport(
-        user: User,
-        reportData: CreateReportInput,
-    ): Promise<Report> {
+    async createReport(user: User, reportData: CreateReportInput,): Promise<Report> {
         const _medias = [];
         if (reportData.medias?.length) {
             for (const m of reportData.medias) {
@@ -80,7 +79,7 @@ export class ReportsService {
             _id: reportId,
             upVotes: user._id,
         });
-
+        
         if (!isUpVoted.length) {
             await this.reportModel.findByIdAndUpdate(reportId, {
                 $push: { upVotes: user._id },
@@ -96,14 +95,11 @@ export class ReportsService {
                 $pull: { upVotes: user._id },
                 new: true,
             });
-            return await this.findByReportId(reportId);
         }
-    }
+        return await this.findByReportId(reportId);
+}
 
-    async addComment(
-        user: User,
-        commentData: CreateCommentInput,
-    ): Promise<Report> {
+    async addComment(user: User, commentData: CreateCommentInput,): Promise<Report> {
         const report = await this.findByReportId(commentData.reportId);
         if (!report) {
             throw new NotFoundException('report id not found');
@@ -124,10 +120,7 @@ export class ReportsService {
         return await this.findByReportId(commentData.reportId);
     }
 
-    async updateStatusReport(
-        admin: Admin,
-        updateStatusData: UpdateStatusReportInput,
-    ): Promise<Report> {
+    async updateStatusReport(admin: Admin, updateStatusData: UpdateStatusReportInput,): Promise<Report> {
         const report = await this.reportModel.findByIdAndUpdate(
             updateStatusData.reportId,
             { status: { admin: admin._id.toString(), type: updateStatusData.type } },
@@ -136,10 +129,7 @@ export class ReportsService {
         return report;
     }
 
-    async addProgress(
-        user: User,
-        progressData: CreateProgressInput,
-    ): Promise<Report> {
+    async addProgress(user: User, progressData: CreateProgressInput,): Promise<Report> {
         const report = await this.findByReportId(progressData.reportId);
         if (!report) {
             throw new NotFoundException('report id not found');
@@ -155,10 +145,7 @@ export class ReportsService {
         return await this.findByReportId(progressData.reportId);
     }
 
-    async updateReviewReport(
-        user: User,
-        updateReviewData: UpdateReviewReportInput,
-    ): Promise<Report> {
+    async updateReviewReport(user: User, updateReviewData: UpdateReviewReportInput,): Promise<Report> {
         const _report = await this.findByReportId(updateReviewData.reportId);
         if (user._id.toString() !== _report.user._id.toString()) {
             throw new NotFoundException('Not report owner');
@@ -186,12 +173,28 @@ export class ReportsService {
         return report;
     }
 
+    async updateTrends() {
+        const reports = await this.reportModel.find({}).sort('-upVotes').skip(0).limit(5)
+        await this.trendsService.updateTrends(reports)
+    }
+
+    async getTrends(): Promise<Report[]> {
+        const _reports = (await this.trendsService.getTrends())['reports']
+        const reports = []
+        for (const report of _reports) {
+            reports.push((await this.reportModel.findById(report._id)))
+        }
+        // const reports = await this.reportModel.find({_id: {$in: _reports.map((m) => (m._id.toString()))}})
+        return reports
+    }
+
     async findByReportId(id: string) {
         return this.reportModel.findById(id);
     }
 
     async findMany() {
         // console.log(await this.reportModel.find({tags: {$in: ['6374f1ff57979609f697348d','637491d862a3c98ddac0ab47' ]}}));
+        await this.updateTrends()
         return this.reportModel.find({});
     }
 }

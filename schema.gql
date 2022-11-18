@@ -158,15 +158,13 @@ type Query {
   admin(_id: String!): Admin
   report(_id: String!): Report
   reports: [Report!]
+  trends: [Report!]
   location(_id: [String!]!): Location!
   getAllLocations: [Location!]!
   getVerifiedTags: [Tag!]!
   getAllTags: [Tag!]!
-<<<<<<< HEAD
   getAvatar: Avatar!
   getAllAvatars: [Avatar!]!
-=======
->>>>>>> 5082389 (modified)
   getNotification(_id: String!): Notification
   getNotifications: [Notification!]
 }
@@ -186,10 +184,7 @@ type Mutation {
   updateReviewReport(updateReviewReportData: UpdateReviewReportInput!): Report!
   createLocation(locationData: CreateLocationInput!): Location!
   updateStatus(updateTagData: UpdateTagInput!): Tag!
-<<<<<<< HEAD
   createAvatar(createAvatarData: CreateAvatarInput!): Avatar!
-=======
->>>>>>> 5082389 (modified)
   updateNotification(updateNotificationData: UpdateNotificationInput!): Notification
 }
 
@@ -273,13 +268,10 @@ input UpdateTagInput {
   status: String!
 }
 
-<<<<<<< HEAD
 input CreateAvatarInput {
   avatarUrl: String!
 }
 
-=======
->>>>>>> 5082389 (modified)
 input UpdateNotificationInput {
   _id: String
 }

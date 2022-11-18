@@ -16,6 +16,7 @@ import { TagsModule } from './tags/tags.module';
 import { ProgressesModule } from './progresses/progresses.module';
 import { AvatarsModule } from './avatars/avatars.module';
 import { NotificationModule } from './notification/notification.module';
+import { TrendsModule } from './trends/trends.module';
 
 
 @Module({
@@ -37,6 +38,7 @@ import { NotificationModule } from './notification/notification.module';
     ProgressesModule,
     AvatarsModule,
     NotificationModule,
+    TrendsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
