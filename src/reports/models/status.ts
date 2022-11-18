@@ -1,7 +1,7 @@
 import { NotAcceptableException } from "@nestjs/common";
-import { Field, ID, ObjectType } from "@nestjs/graphql";
+import { Field,  ObjectType } from "@nestjs/graphql";
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import mongoose, { Document } from "mongoose";
+import mongoose from "mongoose";
 import { Admin } from "src/admins/models/admin";
 
 @Schema()
