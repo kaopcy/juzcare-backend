@@ -1,0 +1,5 @@
+node_modules/
+docker-compose-deploy.yml
+dist
+.git/
+test/
