@@ -5,6 +5,7 @@ import { Admin } from 'src/admins/models/admin';
 import { CommentsService } from 'src/comments/comments.service';
 import { CreateCommentInput } from 'src/comments/dto/inputs/create-comment.input';
 import { MediasService } from 'src/medias/medias.service';
+import { NotificationService } from 'src/notification/notification.service';
 import { CreateProgressInput } from 'src/progresses/dto/inputs/create-progress.input';
 import { ProgressesService } from 'src/progresses/progresses.service';
 import { TagsService } from 'src/tags/tags.service';
@@ -23,6 +24,7 @@ export class ReportsService {
     private readonly commentsService: CommentsService,
     private readonly tagsService: TagsService,
     private readonly progressesService: ProgressesService,
+    private readonly notificationService: NotificationService,
   ) {}
 
   async createReport(
@@ -84,13 +86,18 @@ export class ReportsService {
         $push: { upVotes: user._id },
         new: true,
       });
+      await this.notificationService.createNotification({
+        user,
+        report,
+        type: 'UPVOTE',
+      });
     } else {
       await this.reportModel.findByIdAndUpdate(reportId, {
         $pull: { upVotes: user._id },
         new: true,
       });
+      return await this.findByReportId(reportId);
     }
-    return await this.findByReportId(reportId);
   }
 
   async addComment(
@@ -108,6 +115,11 @@ export class ReportsService {
     await this.reportModel.findByIdAndUpdate(commentData.reportId, {
       $push: { comments: comment._id },
       new: true,
+    });
+    await this.notificationService.createNotification({
+      user,
+      report,
+      type: 'COMMENT',
     });
     return await this.findByReportId(commentData.reportId);
   }

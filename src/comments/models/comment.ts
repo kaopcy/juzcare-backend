@@ -1,7 +1,6 @@
 import { NotAcceptableException } from "@nestjs/common";
-import { Field, ID, ObjectType } from "@nestjs/graphql";
+import { Field, ObjectType } from "@nestjs/graphql";
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { IsNotEmpty, MaxLength, maxLength } from "class-validator";
 import mongoose, { Document } from "mongoose";
 import { User } from "src/users/models/user";
 
@@ -11,7 +10,7 @@ export class Comment {
     @Field()
     _id: string
 
-    @Prop({ type: mongoose.Schema.Types.ObjectId, ref: User.name, required: [true] })
+    @Prop({ type: mongoose.Schema.Types.ObjectId, ref: User.name, required: true })
     @Field(() => User)
     user: User
 

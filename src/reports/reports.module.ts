@@ -19,6 +19,8 @@ import { Admin, AdminSchema } from 'src/admins/models/admin';
 import { AdminsService } from 'src/admins/admins.service';
 import { StatusResolver } from './status.resolver';
 import { ReviewResolver } from './review.resolver';
+import { NotificationService } from 'src/notification/notification.service';
+import { Notification, NotificationSchema } from 'src/notification/models/notifications';
 
 @Module({
   imports: [
@@ -31,6 +33,7 @@ import { ReviewResolver } from './review.resolver';
       { name: Tag.name, schema: TagSchema },
       { name: Progress.name, schema: ProgressSchema },
       { name: Admin.name, schema: AdminSchema },
+      { name: Notification.name, schema: NotificationSchema },
     ]),
   ],
   providers: [
@@ -45,6 +48,7 @@ import { ReviewResolver } from './review.resolver';
     AdminsService,
     StatusResolver,
     ReviewResolver,
+    NotificationService,
   ],
 })
 export class ReportsModule {}

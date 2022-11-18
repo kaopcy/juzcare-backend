@@ -7,13 +7,12 @@ import { UsersService } from 'src/users/users.service';
 import { User, UserSchema } from 'src/users/models/user';
 
 @Module({
-  imports:
-  [
+  imports: [
     MongooseModule.forFeature([
       { name: Comment.name, schema: CommentSchema },
       { name: User.name, schema: UserSchema },
     ]),
   ],
-  providers: [CommentsService, CommentsResolver, UsersService]
+  providers: [CommentsService, CommentsResolver, UsersService],
 })
-export class CommentsModule { }
+export class CommentsModule {}

@@ -83,6 +83,16 @@ type Media {
   updatedAt: DateTime!
 }
 
+type Notification {
+  _id: ID!
+  userId: String!
+  reportId: String!
+  createdAt: DateTime!
+  detail: String!
+  isWatched: Boolean!
+  type: String!
+}
+
 type Progress {
   _id: String!
   user: User!
@@ -154,6 +164,8 @@ type Query {
   getAllTags: [Tag!]!
   getAvatar: Avatar!
   getAllAvatars: [Avatar!]!
+  getNotification(_id: String!): Notification
+  getNotifications: [Notification!]
 }
 
 type Mutation {
@@ -172,6 +184,7 @@ type Mutation {
   createLocation(locationData: CreateLocationInput!): Location!
   updateStatus(updateTagData: UpdateTagInput!): Tag!
   createAvatar(createAvatarData: CreateAvatarInput!): Avatar!
+  updateNotification(updateNotificationData: UpdateNotificationInput!): Notification
 }
 
 input UpdateUserInput {
@@ -256,4 +269,8 @@ input UpdateTagInput {
 
 input CreateAvatarInput {
   avatarUrl: String!
+}
+
+input UpdateNotificationInput {
+  _id: String
 }
