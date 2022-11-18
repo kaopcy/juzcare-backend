@@ -142,4 +142,10 @@ export class ReportsResolver {
     async updateReviewReport(@CurrentUser() user: User, @Args('updateReviewReportData') updateReviewReport: UpdateReviewReportInput): Promise<Report> {
         return await this.reportsService.updateReviewReport(user, updateReviewReport)
     }
+
+    @Query(() => [Report], { nullable: true })
+    @UseGuards(GqlAuthGuard)
+    async trends() {
+        return this.reportsService.getTrends()
+    }
 }

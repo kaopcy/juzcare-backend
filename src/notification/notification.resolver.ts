@@ -33,15 +33,15 @@ export class NotificationResolver {
     return this.notificationService.updateNotification(updateNotificationData);
   }
 
-  @Query(() => Notification, { nullable: true })
-  @UseGuards(GqlAuthGuard)
-  public async getNotification(
-    @Args() getNotificationArgs: GetNotificationArgs,
-  ): Promise<Notification> {
-    const noti = await this.notificationService.getNotification(getNotificationArgs);
-    await this.notificationService.updateNotification({ _id: getNotificationArgs._id })
-    return noti
-  }
+  // @Query(() => Notification, { nullable: true })
+  // @UseGuards(GqlAuthGuard)
+  // public async getNotification(
+  //   @Args() getNotificationArgs: GetNotificationArgs,
+  // ): Promise<Notification> {
+  //   const noti = await this.notificationService.getNotification(getNotificationArgs);
+  //   await this.notificationService.updateNotification({ _id: getNotificationArgs._id })
+  //   return noti
+  // }
 
   @Query(() => [Notification], { nullable: true })
   @UseGuards(GqlAuthGuard)

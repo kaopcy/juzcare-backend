@@ -158,13 +158,13 @@ type Query {
   admin(_id: String!): Admin
   report(_id: String!): Report
   reports: [Report!]
+  trends: [Report!]
   location(_id: [String!]!): Location!
   getAllLocations: [Location!]!
   getVerifiedTags: [Tag!]!
   getAllTags: [Tag!]!
   getAvatar: Avatar!
   getAllAvatars: [Avatar!]!
-  getNotification(_id: String!): Notification
   getNotifications: [Notification!]
 }
 
