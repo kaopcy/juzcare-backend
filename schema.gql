@@ -165,7 +165,6 @@ type Query {
   getAllTags: [Tag!]!
   getAvatar: Avatar!
   getAllAvatars: [Avatar!]!
-  getNotification(_id: String!): Notification
   getNotifications: [Notification!]
 }
 

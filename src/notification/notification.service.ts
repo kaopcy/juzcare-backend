@@ -74,11 +74,11 @@ export class NotificationService {
     const noti = await this.notificationModel
       .find({ userId: getNotificationByUserIdArgs.userId })
       .exec();
-    await this.notificationModel.updateMany(
-      { userId: getNotificationByUserIdArgs.userId },
-      { isWatched: true },
-      { new: true },
-    );
+    // await this.notificationModel.updateMany(
+    //   { userId: getNotificationByUserIdArgs.userId },
+    //   { isWatched: true },
+    //   { new: true },
+    // );
     return noti;
   }
 }
