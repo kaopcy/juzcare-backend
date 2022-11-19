@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import mongoose, { Model } from 'mongoose';
 import { Admin } from 'src/admins/models/admin';
@@ -15,6 +15,7 @@ import { UpdateStatusReportInput } from './dto/inputs/update-status.report';
 import { UpdateReviewReportInput } from './dto/inputs/update-review.dto';
 import { Report, ReportDocument } from './models/report';
 import { TrendsService } from 'src/trends/trends.service';
+import { Cron } from '@nestjs/schedule';
 
 @Injectable()
 export class ReportsService {
@@ -28,6 +29,8 @@ export class ReportsService {
         private readonly notificationService: NotificationService,
         private readonly trendsService: TrendsService,
         ) { }
+    
+    private readonly logger = new Logger(ReportsService.name);
 
     async createReport(user: User, reportData: CreateReportInput,): Promise<Report> {
         const _medias = [];
@@ -97,7 +100,7 @@ export class ReportsService {
             });
         }
         return await this.findByReportId(reportId);
-}
+    }
 
     async addComment(user: User, commentData: CreateCommentInput,): Promise<Report> {
         const report = await this.findByReportId(commentData.reportId);
@@ -173,16 +176,31 @@ export class ReportsService {
         return report;
     }
 
+    private _idReportsInTrend = [];
+    @Cron('0 12 * * *')
     async updateTrends() {
-        const reports = await this.reportModel.find({}).sort('-upVotes').skip(0).limit(5)
-        await this.trendsService.updateTrends(reports)
+        const reports = await this.reportModel.find({}).sort('-upVotes')
+        const _reports = reports.filter(r => {
+            return !this._idReportsInTrend.includes(r._id.toString())
+        })
+        if (_reports.length < 5 ) {
+            this._idReportsInTrend = [ ...this._idReportsInTrend, ..._reports.map(r => r._id.toString())]
+            await this.trendsService.updateTrends(_reports)
+        } else {
+            this._idReportsInTrend = [ ...this._idReportsInTrend, ..._reports.slice(0, 5).map(r => r._id.toString())]
+            await this.trendsService.updateTrends(_reports.slice(0, 5))
+        }
+        this._idReportsInTrend = this._idReportsInTrend.filter(id => {
+            return reports.some(_r => _r._id.toString() === id)
+        })
+        this.logger.debug('Updated Treads at 12.00 PM Everyday')
     }
 
     async getTrends(): Promise<Report[]> {
         const _reports = (await this.trendsService.getTrends())['reports']
         const reports = []
         for (const report of _reports) {
-            reports.push((await this.reportModel.findById(report._id)))
+            reports.push(await this.reportModel.findById(report._id))
         }
         // const reports = await this.reportModel.find({_id: {$in: _reports.map((m) => (m._id.toString()))}})
         return reports
