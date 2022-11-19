@@ -4,5 +4,5 @@ import { User } from "src/users/models/user";
 @ObjectType()
 export class AuthUser extends User {
     @Field()
-    access_token: string
+    accessToken: string
 }
