@@ -1,5 +1,6 @@
 import { Field, InputType } from "@nestjs/graphql"
-import { IsNotEmpty, IsString } from "class-validator"
+import { IsEnum, IsNotEmpty, IsString } from "class-validator"
+import { VerifyEnum } from "src/tags/enum/verify.enum"
 
 @InputType()
 export class UpdateTagInput {
@@ -11,6 +12,6 @@ export class UpdateTagInput {
 
     @Field()
     @IsNotEmpty()
-    @IsString()
-    status: string
+    @IsEnum(VerifyEnum)
+    status: VerifyEnum
 }

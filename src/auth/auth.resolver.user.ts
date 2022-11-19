@@ -43,7 +43,7 @@ export class AuthUserResolver {
         return this.authService.register(registerData)
     }
 
-    @Mutation(() => User)
+    @Mutation(() => User, {name: 'deleteUser'})
     @UseGuards(GqlAuthGuard)
     async deleteUser(@CurrentUser() user: User): Promise<User | null> {
         return this.usersService.deleteUser({_id: user._id})

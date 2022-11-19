@@ -19,6 +19,11 @@ export class AvatarsService {
         return this.avatarModel.findById(getAvatarArgs._id)
     }
 
+    async randomAvatar(): Promise<Avatar> {
+        const avatars = await this.avatarModel.find({})
+        return avatars[Math.floor(Math.random() * avatars.length)]
+    }
+
     async getAllAvatars(): Promise<Avatar[]> {
         return this.avatarModel.find({})
     }

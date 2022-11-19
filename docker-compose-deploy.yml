@@ -1,0 +1,11 @@
+version: "3.7"
+services: 
+  nwlserver:
+    build:
+      dockerfile: dockerfile
+      context: .
+    image: "juzcare/dev"
+    ports:
+      - "6003:3006"
+    volumes:
+      - "./build:/juzcare-backend/dev/build"

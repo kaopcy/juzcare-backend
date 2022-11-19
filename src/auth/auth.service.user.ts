@@ -73,13 +73,13 @@ export class AuthUserService {
             email: user.email,
             sub: user._id.toString(),
         }
-        const access_token = this.jwtService.sign(payload, { secret: process.env.JWT_SECRET })
-        return access_token
+        const accessToken = this.jwtService.sign(payload, { secret: process.env.JWT_SECRET })
+        return accessToken
     }
 
     private createAuthUser(user: User): Promise<AuthUser | null> {
-        const access_token = this.generateToken(user)
-        return { ...({ ...user }['_doc']), access_token }
+        const accessToken = this.generateToken(user)
+        return { ...({ ...user }['_doc']), accessToken }
     }
 
     private async getRandomAvatar(): Promise<Avatar> {
