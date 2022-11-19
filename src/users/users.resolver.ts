@@ -6,7 +6,7 @@ import { AvatarsService } from 'src/avatars/avatars.service';
 import { Avatar } from 'src/avatars/models/avatar';
 import { GetUserArgs } from './dto/args/get-user.args';
 import { GetUsersArgs } from './dto/args/get-users.args';
-// import { DeleteUserInput } from './dto/inputs/delete-user.input';
+import { DeleteUserInput } from './dto/inputs/delete-user.input';
 import { UpdateAvatarUserInput } from './dto/inputs/update-avatar-user.input';
 // import { CreateUserInput } from './dto/inputs/create-user.input';
 // import { DeleteUserInput } from './dto/inputs/delete-user.input';
@@ -56,9 +56,9 @@ export class UsersResolver {
         return this.usersService.updateAvatarUser(user, updateAvatarUserData.avatarId)
     }
 
-    // @Mutation(() => User, { name: 'deleteUser', nullable: true })
-    // @UseGuards(GqlAuthGuard)
-    // async deleteUser(@Args('deleteUserData') deleteUserData: DeleteUserInput) {
-    //     return this.usersService.deleteUser(deleteUserData)
-    // }
+    @Mutation(() => User, { name: 'deleteUserById', nullable: true })
+    @UseGuards(GqlAuthGuard)
+    async deleteUser(@Args('deleteUserData') deleteUserData: DeleteUserInput) {
+        return this.usersService.deleteUser(deleteUserData)
+    }
 }
