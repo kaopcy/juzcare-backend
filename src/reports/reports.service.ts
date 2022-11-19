@@ -15,6 +15,9 @@ import { UpdateStatusReportInput } from './dto/inputs/update-status.report';
 import { UpdateReviewReportInput } from './dto/inputs/update-review.dto';
 import { Report, ReportDocument } from './models/report';
 import { TrendsService } from 'src/trends/trends.service';
+import { GetReportsArgs } from './dto/args/get-reports.args';
+import { OrderEnum, SortEnum } from './dto/enum/query.enum';
+import { length, project } from './dto/pipeline/aggregate.pipeline';
 
 @Injectable()
 export class ReportsService {
@@ -27,7 +30,7 @@ export class ReportsService {
         private readonly progressesService: ProgressesService,
         private readonly notificationService: NotificationService,
         private readonly trendsService: TrendsService,
-        ) { }
+    ) { }
 
     async createReport(user: User, reportData: CreateReportInput,): Promise<Report> {
         const _medias = [];
@@ -79,10 +82,9 @@ export class ReportsService {
             _id: reportId,
             upVotes: user._id,
         });
-        
         if (!isUpVoted.length) {
             await this.reportModel.findByIdAndUpdate(reportId, {
-                $push: { upVotes: user._id },
+                $push: { upVotes: user._id.toString() },
                 new: true,
             });
             await this.notificationService.createNotification({
@@ -92,12 +94,12 @@ export class ReportsService {
             });
         } else {
             await this.reportModel.findByIdAndUpdate(reportId, {
-                $pull: { upVotes: user._id },
+                $pull: { upVotes: user._id.toString() },
                 new: true,
             });
         }
         return await this.findByReportId(reportId);
-}
+    }
 
     async addComment(user: User, commentData: CreateCommentInput,): Promise<Report> {
         const report = await this.findByReportId(commentData.reportId);
@@ -192,9 +194,29 @@ export class ReportsService {
         return this.reportModel.findById(id);
     }
 
-    async findMany() {
-        // console.log(await this.reportModel.find({tags: {$in: ['6374f1ff57979609f697348d','637491d862a3c98ddac0ab47' ]}}));
+    async findMany(getReportsArgs: GetReportsArgs) {
+        const { sort, order, filter, tags, page, pageAmount } = getReportsArgs
+
+        const reports = await this.reportModel.aggregate([
+            // { $project: { 'isFilterExisted': { $or: [{ $eq: [filter, 'UNVERIFIED'] }, { $eq: [filter, 'VERIFIED'] }, { $eq: [filter, 'INPROGRESS'] }, , { $eq: [filter, 'COMPLETE'] }] } } },
+            { $match: { 'status.type': filter } },
+            // { $match: { 'status.type': 'COMPLETE' } },
+            { $project: { ...project, ...length, ...  { 'isTags': { $gt: [{ $size: { $setIntersection: [tags.map(tag => new mongoose.Types.ObjectId(tag)), '$tags'] } }, 0] } } } },
+            {
+                $sort: sort == SortEnum.sortByLike
+                    ? { 'upVotesLength': order == OrderEnum.ascending ? 1 : -1 } :
+                    sort == SortEnum.sortByComment
+                        ? { 'commentsLength': order == OrderEnum.ascending ? 1 : -1 } :
+                        { 'createdAt': order == OrderEnum.ascending ? 1 : -1 }
+            },
+            { $match: { 'isTags': (tags.length) ? true : false } },
+            // { $skip: 0 },
+            // { $limit: 2 },
+            { $project: { ...project, ...{ 'isTags': 1, 'isFilterExisted': 1 } } },
+        ])
+        console.log(reports.slice(page * pageAmount, (page + 1) * pageAmount));
+        // console.log(reports.length, '\n');
         await this.updateTrends()
-        return this.reportModel.find({});
+        return await this.reportModel.find({})
     }
 }
