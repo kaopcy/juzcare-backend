@@ -1,6 +1,6 @@
 import { UseGuards } from '@nestjs/common';
 import { Resolver, Query, Args, Mutation } from '@nestjs/graphql';
-import { GetNotificationArgs } from './dto/args/get-notification.args';
+// import { GetNotificationArgs } from './dto/args/get-notification.args';
 import { Notification } from './models/notifications';
 import { NotificationService } from './notification.service';
 import { GqlAuthGuard } from 'src/auth/guards/gql-auth.guard';
