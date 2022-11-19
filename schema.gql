@@ -1,0 +1,276 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Avatar {
+  _id: String!
+  avatarUrl: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type User {
+  _id: ID!
+  email: String!
+  emailType: String!
+  username: String!
+  password: String
+  firstName: String!
+  lastName: String!
+  phone: String!
+  role: String!
+  avatar: Avatar
+  isBanned: Boolean!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Admin {
+  _id: ID!
+  email: String!
+  password: String
+  firstName: String!
+  lastName: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type AuthAdmin {
+  _id: ID!
+  email: String!
+  password: String
+  firstName: String!
+  lastName: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  access_token: String!
+}
+
+type AuthUser {
+  _id: ID!
+  email: String!
+  emailType: String!
+  username: String!
+  password: String
+  firstName: String!
+  lastName: String!
+  phone: String!
+  role: String!
+  avatar: Avatar
+  isBanned: Boolean!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  access_token: String!
+}
+
+type Comment {
+  _id: String!
+  user: User!
+  body: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Media {
+  _id: ID!
+  imageUrl: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Notification {
+  _id: ID!
+  userId: String!
+  reportId: String!
+  createdAt: DateTime!
+  detail: String!
+  isWatched: Boolean!
+  type: String!
+}
+
+type Progress {
+  _id: String!
+  user: User!
+  detail: String!
+  medias: [Media!]
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Tag {
+  _id: ID!
+  name: String!
+  status: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Location {
+  _id: String!
+  name: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Status {
+  admin: Admin
+  type: String!
+}
+
+type Review {
+  description: String
+  medias: [Media!]
+  star: Float
+  createdAt: DateTime!
+}
+
+type Report {
+  _id: ID!
+  user: User!
+  detail: String!
+  title: String!
+  locationDetail: String!
+  status: Status
+  location: Location
+  upVotes: [User!]
+  medias: [Media!]
+  comments: [Comment!]
+  progresses: [Progress!]
+  tags: [Tag!]
+  review: Review
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Query {
+  user(_id: String!): User
+  users(_ids: [String!]!): [User!]
+  loginUser(email: String!, password: String!): AuthUser!
+  getMeUser: AuthUser!
+  rePasswordUser(oldPassword: String!, newPassword: String!): AuthUser!
+  loginAdmin(email: String!, password: String!): AuthAdmin!
+  getMeAdmin: AuthAdmin!
+  admin(_id: String!): Admin
+  report(_id: String!): Report
+  reports: [Report!]
+  trends: [Report!]
+  location(_id: [String!]!): Location!
+  getAllLocations: [Location!]!
+  getVerifiedTags: [Tag!]!
+  getAllTags: [Tag!]!
+  getAvatar: Avatar!
+  getAllAvatars: [Avatar!]!
+  getNotifications: [Notification!]
+}
+
+type Mutation {
+  updateUser(updateUserData: UpdateUserInput!): User
+  updateAvatarUser(updateUserAvatarId: UpdateAvatarUserInput!): User!
+  registerUser(registerData: CreateUserInput!): AuthUser!
+  deleteUser: User!
+  registerAdmin(registerData: CreateAdminInput!): AuthAdmin!
+  deleteAdmin: User!
+  createReport(createReportData: CreateReportInput!): Report!
+  createCommentReport(createCommentReportData: CreateCommentInput!): Report!
+  createProgressReport(createProgressReportData: CreateProgressInput!): Report!
+  updateStatusReport(updateStatusReportData: UpdateStatusReportInput!): Report!
+  upVoteReport(_id: String!): Report!
+  updateReviewReport(updateReviewReportData: UpdateReviewReportInput!): Report!
+  createLocation(locationData: CreateLocationInput!): Location!
+  updateStatus(updateTagData: UpdateTagInput!): Tag!
+  createAvatar(createAvatarData: CreateAvatarInput!): Avatar!
+  updateNotification(updateNotificationData: UpdateNotificationInput!): Notification
+}
+
+input UpdateUserInput {
+  _id: ID!
+  email: String
+  emailType: String
+  username: String
+  firstName: String
+  lastName: String
+  phone: String
+  role: String
+  isBannned: Boolean
+}
+
+input UpdateAvatarUserInput {
+  avatarId: ID!
+}
+
+input CreateUserInput {
+  email: String!
+  emailType: String!
+  username: String!
+  password: String!
+  firstName: String!
+  lastName: String!
+  phone: String!
+  role: String!
+}
+
+input CreateAdminInput {
+  email: String!
+  username: String!
+  password: String!
+  firstName: String!
+  lastName: String!
+}
+
+input CreateReportInput {
+  detail: String!
+  title: String!
+  locationDetail: String!
+  location: String!
+  tags: [String!]
+  medias: [CreateMediaInput!]
+}
+
+input CreateMediaInput {
+  imageUrl: String!
+}
+
+input CreateCommentInput {
+  reportId: String!
+  body: String!
+}
+
+input CreateProgressInput {
+  reportId: String!
+  detail: String!
+  medias: [CreateMediaInput!]
+}
+
+input UpdateStatusReportInput {
+  reportId: String!
+  type: String!
+}
+
+input UpdateReviewReportInput {
+  reportId: String!
+  description: String!
+  medias: [CreateMediaInput!]
+  star: Float!
+}
+
+input CreateLocationInput {
+  name: String!
+}
+
+input UpdateTagInput {
+  _id: String!
+  status: String!
+}
+
+input CreateAvatarInput {
+  avatarUrl: String!
+}
+
+input UpdateNotificationInput {
+  _id: String
+}
