@@ -13,7 +13,7 @@ export class Tag {
     @Field()
     name: string
 
-    @Prop({ type: String, required: [true], default:'noVerify' })
+    @Prop({ type: String, required: [true], default:'UNVERIFIED' ,enum:['UNVERIFIED','VERIFIED'] })
     @Field()
     status: string
 
