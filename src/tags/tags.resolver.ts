@@ -27,7 +27,7 @@ export class TagsResolver {
 
     @Mutation(() => Tag)
     @UseGuards(GqlAuthGuard)
-    async updateStatus(@CurrentUser() admin: Admin, @Args('updateTagData') updateTagData: UpdateTagInput) {
+    async updateStatusTag(@CurrentUser() admin: Admin, @Args('updateTagData') updateTagData: UpdateTagInput) {
         await this.adminsService.verifyAdminRole(admin._id)
         return this.tagsService.updateStatus(updateTagData)
     }
