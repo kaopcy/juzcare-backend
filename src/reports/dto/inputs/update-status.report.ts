@@ -1,5 +1,6 @@
 import { Field, InputType } from "@nestjs/graphql"
-import { IsNotEmpty, IsString } from "class-validator"
+import { IsEnum, IsNotEmpty, IsString } from "class-validator"
+import { FilterEnum } from "../enum/query.enum"
 
 @InputType()
 export class UpdateStatusReportInput {
@@ -10,6 +11,6 @@ export class UpdateStatusReportInput {
 
     @Field()
     @IsNotEmpty()
-    @IsString()
-    type: string
+    @IsEnum(FilterEnum, {message: 'type in not in VERIFIED | INPROGRESS | COMPLETE'})
+    type: FilterEnum
 }
