@@ -9,7 +9,7 @@ export class StatusResolver {
         private readonly adminsService: AdminsService
     ) { }
 
-    @ResolveField(() => Admin)
+    @ResolveField(() => Admin, {nullable: true})
     async admin(@Parent() status: Status) {
         return await this.adminsService.findById(status.admin._id)
     }

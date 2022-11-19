@@ -4,6 +4,7 @@ import { Model } from 'mongoose';
 import { GetTagsArgs } from './dto/args/get-tags.args';
 import { CreateTagInput } from './dto/inputs/create-tag.input';
 import { UpdateTagInput } from './dto/inputs/update-tag.input';
+import { VerifyEnum } from './enum/verify.enum';
 import { Tag, TagDocument } from './models/tag';
 
 @Injectable()
@@ -28,7 +29,7 @@ export class TagsService {
     }
 
     async getVeifiedTags(): Promise<Tag[]> {
-        return this.tagModel.find({status: 'Verified'})
+        return this.tagModel.find({status: VerifyEnum.verified})
     }
 
     async updateStatus(updateTagData: UpdateTagInput): Promise<Tag> {

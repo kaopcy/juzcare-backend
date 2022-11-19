@@ -15,9 +15,14 @@ export class AvatarsResolver {
         return await this.avatarsService.createAvatar(createAvatarData)
     }
 
+    // @Query(() => Avatar)
+    // async getAvatar(getAvatarArgs: GetAvatarArgs): Promise<Avatar> {
+    //     return await this.avatarsService.getAvatar(getAvatarArgs)
+    // }
+
     @Query(() => Avatar)
-    async getAvatar(getAvatarArgs: GetAvatarArgs): Promise<Avatar> {
-        return await this.avatarsService.getAvatar(getAvatarArgs)
+    async randomAvatar(): Promise<Avatar> {
+        return await this.avatarsService.randomAvatar()
     }
 
     @Query(() => [Avatar])

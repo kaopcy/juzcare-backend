@@ -25,6 +25,7 @@ import { UpdateReviewReportInput } from './dto/inputs/update-review.dto';
 import { Report } from './models/report';
 import { Review } from './models/review';
 import { ReportsService } from './reports.service';
+import { GetReportsArgs } from './dto/args/get-reports.args';
 
 @Resolver(() => Report)
 export class ReportsResolver {
@@ -47,8 +48,8 @@ export class ReportsResolver {
 
     @Query(() => [Report], { nullable: true })
     @UseGuards(GqlAuthGuard)
-    async reports() {
-        return this.reportsService.findMany()
+    async reports(@Args() getReportsArgs: GetReportsArgs) {
+        return this.reportsService.findMany(getReportsArgs)
     }
 
     @Mutation(() => Report)

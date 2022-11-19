@@ -48,7 +48,7 @@ type AuthAdmin {
   lastName: String!
   createdAt: DateTime!
   updatedAt: DateTime!
-  access_token: String!
+  accessToken: String!
 }
 
 type AuthUser {
@@ -65,7 +65,7 @@ type AuthUser {
   isBanned: Boolean!
   createdAt: DateTime!
   updatedAt: DateTime!
-  access_token: String!
+  accessToken: String!
 }
 
 type Comment {
@@ -157,13 +157,13 @@ type Query {
   getMeAdmin: AuthAdmin!
   admin(_id: String!): Admin
   report(_id: String!): Report
-  reports: [Report!]
+  reports(sort: String!, order: String!, filter: String!, tags: [String!], page: Int!, pageAmount: Int!): [Report!]
   trends: [Report!]
   location(_id: [String!]!): Location!
   getAllLocations: [Location!]!
   getVerifiedTags: [Tag!]!
   getAllTags: [Tag!]!
-  getAvatar: Avatar!
+  randomAvatar: Avatar!
   getAllAvatars: [Avatar!]!
   getNotifications: [Notification!]
 }
@@ -171,6 +171,7 @@ type Query {
 type Mutation {
   updateUser(updateUserData: UpdateUserInput!): User
   updateAvatarUser(updateUserAvatarId: UpdateAvatarUserInput!): User!
+  deleteUserById(deleteUserData: DeleteUserInput!): User
   registerUser(registerData: CreateUserInput!): AuthUser!
   deleteUser: User!
   registerAdmin(registerData: CreateAdminInput!): AuthAdmin!
@@ -182,7 +183,7 @@ type Mutation {
   upVoteReport(_id: String!): Report!
   updateReviewReport(updateReviewReportData: UpdateReviewReportInput!): Report!
   createLocation(locationData: CreateLocationInput!): Location!
-  updateStatus(updateTagData: UpdateTagInput!): Tag!
+  updateStatusTag(updateTagData: UpdateTagInput!): Tag!
   createAvatar(createAvatarData: CreateAvatarInput!): Avatar!
   updateNotification(updateNotificationData: UpdateNotificationInput!): Notification
 }
@@ -201,6 +202,10 @@ input UpdateUserInput {
 
 input UpdateAvatarUserInput {
   avatarId: ID!
+}
+
+input DeleteUserInput {
+  _id: String!
 }
 
 input CreateUserInput {

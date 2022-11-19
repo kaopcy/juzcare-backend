@@ -68,12 +68,12 @@ export class AuthAdminService {
             email: admin.email,
             sub: admin._id.toString(),
         }
-        const access_token = this.jwtService.sign(payload, { secret: process.env.JWT_SECRET })
-        return access_token
+        const accessToken = this.jwtService.sign(payload, { secret: process.env.JWT_SECRET })
+        return accessToken
     }
 
     private createAuthAdmin(admin: Admin): Promise<AuthAdmin | null> {
-        const access_token = this.generateToken(admin)
-        return { ...({ ...admin }['_doc']), access_token }
+        const accessToken = this.generateToken(admin)
+        return { ...({ ...admin }['_doc']), accessToken }
     }
 }
