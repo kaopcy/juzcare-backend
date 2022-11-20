@@ -18,6 +18,8 @@ import { TrendsService } from 'src/trends/trends.service';
 import { GetReportsArgs } from './dto/args/get-reports.args';
 import { OrderEnum, SortEnum } from './dto/enum/query.enum';
 import { length, project } from './dto/pipeline/aggregate.pipeline';
+import { PaginateReport } from './models/paginate.report';
+import { GetPopularTagsArgs } from './dto/args/get-popular-tags.args';
 
 @Injectable()
 export class ReportsService {
@@ -48,14 +50,8 @@ export class ReportsService {
             for (const tag of reportData.tags) {
                 // console.log(tag, !mongoose.Types.ObjectId.isValid(tag));
                 if (!mongoose.Types.ObjectId.isValid(tag)) {
-                    const duplicate_tag = await this.tagsService.getTagByName(tag);
-                    let new_tag;
-                    if (!duplicate_tag) {
-                        new_tag = await this.tagsService.createTag({ name: tag });
-                    } else {
-                        new_tag = duplicate_tag;
-                    }
-                    _tags.push(new_tag._id.toString());
+                    const _tag = await this.tagsService.createTag({ name: tag })
+                    _tags.push(_tag._id.toString());
                 } else {
                     _tags.push(tag);
                 }
@@ -186,7 +182,6 @@ export class ReportsService {
         for (const report of _reports) {
             reports.push((await this.reportModel.findById(report._id)))
         }
-        // const reports = await this.reportModel.find({_id: {$in: _reports.map((m) => (m._id.toString()))}})
         return reports
     }
 
@@ -194,14 +189,24 @@ export class ReportsService {
         return this.reportModel.findById(id);
     }
 
-    async findMany(getReportsArgs: GetReportsArgs) {
+    async findMany(getReportsArgs: GetReportsArgs): Promise<PaginateReport> {
         const { sort, order, filter, tags, page, pageAmount } = getReportsArgs
-
         const reports = await this.reportModel.aggregate([
-            // { $project: { 'isFilterExisted': { $or: [{ $eq: [filter, 'UNVERIFIED'] }, { $eq: [filter, 'VERIFIED'] }, { $eq: [filter, 'INPROGRESS'] }, , { $eq: [filter, 'COMPLETE'] }] } } },
-            { $match: { 'status.type': filter } },
-            // { $match: { 'status.type': 'COMPLETE' } },
-            { $project: { ...project, ...length, ...  { 'isTags': { $gt: [{ $size: { $setIntersection: [tags.map(tag => new mongoose.Types.ObjectId(tag)), '$tags'] } }, 0] } } } },
+            { $match: { 'status.type': { $in: filter.length ? filter : ["UNVERIFIED", "VERIFIED", "INPROGRESS", "COMPLETE"] } } },
+            {
+                $lookup:
+                {
+                    from: "tags",
+                    localField: "tags",
+                    foreignField: "_id",
+                    as: "_tags"
+                }
+            },
+            {
+                $project: {
+                    ...project, ...length, ...  { 'isTags': { $gt: [{ $size: { $setIntersection: [tags, '$_tags.name'] } }, 0] } }
+                }
+            },
             {
                 $sort: sort == SortEnum.sortByLike
                     ? { 'upVotesLength': order == OrderEnum.ascending ? 1 : -1 } :
@@ -210,13 +215,55 @@ export class ReportsService {
                         { 'createdAt': order == OrderEnum.ascending ? 1 : -1 }
             },
             { $match: { 'isTags': (tags.length) ? true : false } },
-            // { $skip: 0 },
-            // { $limit: 2 },
-            { $project: { ...project, ...{ 'isTags': 1, 'isFilterExisted': 1 } } },
+            { $project: { ...project, } },
         ])
-        console.log(reports.slice(page * pageAmount, (page + 1) * pageAmount));
-        // console.log(reports.length, '\n');
+        const nextPage = ((page + 1) * pageAmount < reports.length) ? page + 1 : -1
         await this.updateTrends()
-        return await this.reportModel.find({})
+        return { reports: reports.slice(page * pageAmount, (page + 1) * pageAmount), nextPage, currentPage: page }
+    }
+
+    async getPopularTags(tag: GetPopularTagsArgs) {
+        const _tags = await this.reportModel.aggregate([
+            {
+                $lookup:
+                {
+                    from: "tags",
+                    localField: "tags",
+                    foreignField: "_id",
+                    as: "_tags"
+                }
+            },
+            {
+                $unwind: '$_tags'
+            },
+            { $group: { _id: "$_tags", count: { $sum: 1 } } },
+            { $sort: { 'count': -1 } },
+            {
+                $addFields: {
+                    returnObject: {
+                        $regexFind: { input: { $toLower:"$_id.name"}, regex: { $toLower: tag.name} }
+                    }
+                }
+            },
+            // {
+            //     $match: { returnObject: { $ne: null }, }
+            // },
+            {
+                $match: { returnObject: { $ne: null }, '_id.status': { $eq: 'VERIFIED' } }
+            },
+            { $skip: 0 },
+            { $limit: 10 },
+            {
+                $project: {
+                    _id: '$_id._id',
+                    name: '$_id.name',
+                    status: '$_id.status',
+                    createdAt: '$_id.createdAt',
+                    updatedAt: '$_id.updatedAt',
+                    count: '$count',
+                }
+            }
+        ])
+        return _tags
     }
 }
