@@ -5,7 +5,7 @@ import { IsNotEmpty, IsString } from "class-validator"
 export class CreateTagInput {
 
     @Field()
-    @IsNotEmpty()
+    @IsNotEmpty({ message: 'ชื่อแท็กยังว่างอยู่' })
     @IsString()
     name: string
 

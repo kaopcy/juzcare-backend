@@ -147,6 +147,21 @@ type Report {
   updatedAt: DateTime!
 }
 
+type PaginateReport {
+  currentPage: Int!
+  nextPage: Int!
+  reports: [Report!]!
+}
+
+type AggregateTags {
+  _id: ID!
+  name: String!
+  status: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  count: Int!
+}
+
 type Query {
   user(_id: String!): User
   users(_ids: [String!]!): [User!]
@@ -157,8 +172,9 @@ type Query {
   getMeAdmin: AuthAdmin!
   admin(_id: String!): Admin
   report(_id: String!): Report
-  reports(sort: String!, order: String!, filter: String!, tags: [String!], page: Int!, pageAmount: Int!): [Report!]
+  reports(sort: String!, order: String!, filter: [String!]!, tags: [String!]!, page: Int!, pageAmount: Int!): PaginateReport
   trends: [Report!]
+  getPopularTags(name: String!): [AggregateTags!]
   location(_id: [String!]!): Location!
   getAllLocations: [Location!]!
   getVerifiedTags: [Tag!]!
@@ -183,6 +199,7 @@ type Mutation {
   upVoteReport(_id: String!): Report!
   updateReviewReport(updateReviewReportData: UpdateReviewReportInput!): Report!
   createLocation(locationData: CreateLocationInput!): Location!
+  createTag(createTagData: CreateTagInput!): Tag!
   updateStatusTag(updateTagData: UpdateTagInput!): Tag!
   createAvatar(createAvatarData: CreateAvatarInput!): Avatar!
   updateNotification(updateNotificationData: UpdateNotificationInput!): Notification
@@ -264,6 +281,10 @@ input UpdateReviewReportInput {
 }
 
 input CreateLocationInput {
+  name: String!
+}
+
+input CreateTagInput {
   name: String!
 }
 

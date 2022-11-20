@@ -4,10 +4,10 @@ import { IsNotEmpty } from "class-validator";
 @ArgsType()
 export class RePasswordAuthArgs {
     @Field()
-    @IsNotEmpty()
+    @IsNotEmpty({ message: 'กรุณากรอกรหัสผ่านเดิม' })
     oldPassword: string
 
     @Field()
-    @IsNotEmpty()
+    @IsNotEmpty({ message: 'กรุณากรอกรหัสผ่านใหม่' })
     newPassword: string
 }

@@ -6,12 +6,12 @@ import { Media } from 'src/medias/models/media';
 @InputType()
 export class UpdateReviewReportInput {
   @Field()
-  @IsNotEmpty()
+  @IsNotEmpty({ message: 'ไอดีรายงานว่างอยู่' })
   @IsString()
   reportId: string;
 
   @Field()
-  @IsNotEmpty()
+  @IsNotEmpty({ message: 'รายละเอียดว่างอยู่' })
   @IsString()
   description: string;
 
@@ -19,7 +19,7 @@ export class UpdateReviewReportInput {
   medias: Media[];
 
   @Field()
-  @IsNotEmpty()
+  @IsNotEmpty({ message: 'ยังไม่มีจำนวนไลก์' })
   @IsNumber()
   star: number;
 }

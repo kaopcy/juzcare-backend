@@ -4,6 +4,6 @@ import { IsNotEmpty } from "class-validator";
 @ArgsType()
 export class GetReportArgs {
     @Field()
-    @IsNotEmpty()
+    @IsNotEmpty({ message: 'ไอดียังว่างอยู่' })
     _id: string
 }

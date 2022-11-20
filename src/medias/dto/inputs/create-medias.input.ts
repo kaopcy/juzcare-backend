@@ -4,6 +4,6 @@ import { IsNotEmpty } from "class-validator"
 @InputType()
 export class CreateMediasInput {
     @Field(() => [String])
-    @IsNotEmpty()
+    @IsNotEmpty({ message: 'กรุณาใส่ลิงก์' })
     imageUrls: string[]
 }

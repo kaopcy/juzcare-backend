@@ -7,22 +7,22 @@ import { Media } from "src/medias/models/media"
 export class CreateReportInput {
 
     @Field()
-    @IsNotEmpty()
+    @IsNotEmpty({ message: 'กรุณาใส่รายละเอียด' })
     @IsString()
     detail: string
 
     @Field()
-    @IsNotEmpty()
+    @IsNotEmpty({ message: 'กรุณาใส่หัวข้อ' })
     @IsString()
     title: string
 
     @Field()
-    @IsNotEmpty()
+    @IsNotEmpty({ message: 'กรุณาใส่รายละเอียดของตำแหน่ง' })
     @IsString()
     locationDetail: string
 
     @Field()
-    @IsNotEmpty()
+    @IsNotEmpty({ message: 'กรุณาใส่ตำแหน่ง' })
     @IsString()
     location: string
 
