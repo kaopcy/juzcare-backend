@@ -155,4 +155,9 @@ export class ReportsResolver {
     async trends() {
         return this.reportsService.getTrends()
     }
+
+    @Query(() => [AggregateTags], { nullable: true })
+    async getPopularTags(@Args() tag: GetPopularTagsArgs) {
+        return this.reportsService.getPopularTags(tag)
+    }
 }
