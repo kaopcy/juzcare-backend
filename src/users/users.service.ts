@@ -23,8 +23,8 @@ export class UsersService {
         return user
     }
 
-    public async updateUser(updateUserData: UpdateUserInput): Promise<User> {
-        const updated_user = this.userModel.findByIdAndUpdate(updateUserData._id, updateUserData, { new: true })
+    public async updateUser(userId: string ,updateUserData: UpdateUserInput): Promise<User> {
+        const updated_user = this.userModel.findByIdAndUpdate(userId, updateUserData, { new: true })
         return updated_user
     }
 
@@ -71,7 +71,7 @@ export class UsersService {
         const salt = await bcrypt.genSalt(parseInt(process.env.JWT_SALT))
         const hash = bcrypt.hashSync(userData.newPassword, salt)
         user.password = hash
-        return this.updateUser(user)
+        return this.updateUser(user._id,user)
     }
 
     public async findById(_id: string): Promise<User> {
