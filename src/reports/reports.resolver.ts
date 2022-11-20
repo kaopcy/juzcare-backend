@@ -43,7 +43,6 @@ export class ReportsResolver {
         ) { }
 
     @Query(() => Report, { nullable: true })
-    @UseGuards(GqlAuthGuard)
     async report(@Args() getReportArgs: GetReportArgs) {
         return this.reportsService.findByReportId(getReportArgs._id)
     }
@@ -153,7 +152,6 @@ export class ReportsResolver {
     }
 
     @Query(() => [Report], { nullable: true })
-    @UseGuards(GqlAuthGuard)
     async trends() {
         return this.reportsService.getTrends()
     }
