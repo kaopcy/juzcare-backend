@@ -32,7 +32,7 @@ export class UsersService {
         const user = await this.findById(deleteUserData._id)
         const deleted_user = await this.userModel.deleteOne({ _id: deleteUserData._id }).exec()
         if (deleted_user.deletedCount === 0) {
-            throw new NotFoundException('Could not find user id.')
+            throw new NotFoundException('ไม่สามารถหาชื่อผู้ใช้ได้')
         }
         return user
     }
@@ -61,12 +61,12 @@ export class UsersService {
     public async rePasswordUser(userData: { _id: string, oldPassword: string, newPassword: string }): Promise<any> {
         const user = await this.findById(userData._id)
         if (!user) {
-            throw new NotFoundException('Could not find user.')
+            throw new NotFoundException('ไม่สามารถหาชื่อผู้ใช้ได้')
         }
         const passwordIsValided: boolean = await bcrypt.compare(userData.oldPassword, user.password)
         
         if (!passwordIsValided) {
-            throw new NotAcceptableException('old password incorrect')
+            throw new NotAcceptableException('รหัสเก่าไม่ถูกต้อง')
         }
         const salt = await bcrypt.genSalt(parseInt(process.env.JWT_SALT))
         const hash = bcrypt.hashSync(userData.newPassword, salt)
@@ -79,7 +79,7 @@ export class UsersService {
         try {
             user = await this.userModel.findById(_id).exec()
         } catch (error) {
-            throw new NotFoundException('Could not find user.')
+            throw new NotFoundException('ไม่สามารถหาชื่อผู้ใช้ได้')
         }
         if (!user) {
             return null

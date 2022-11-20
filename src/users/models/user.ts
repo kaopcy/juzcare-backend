@@ -61,7 +61,7 @@ export class User {
 export const UserSchema = SchemaFactory.createForClass(User)
 .post('save', function (error, doc, next) {
     if (error.name === 'MongoServerError' && error.code === 11000) {
-        next(new NotAcceptableException('email must be unique'));
+        next(new NotAcceptableException('อีเมล์นี้มีผู้ใช้แล้ว'));
     } else {
         next(error);
     }

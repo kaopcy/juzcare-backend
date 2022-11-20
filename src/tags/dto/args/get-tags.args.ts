@@ -4,6 +4,6 @@ import { IsNotEmpty } from "class-validator";
 @ArgsType()
 export class GetTagsArgs {
     @Field(() => [String])
-    @IsNotEmpty()
+    @IsNotEmpty({ message: 'ไอดีของแท็กยังว่าง' })
     _ids: string[]
 }

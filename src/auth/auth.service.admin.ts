@@ -28,7 +28,7 @@ export class AuthAdminService {
     public async login(loginAuthArgs: LoginAuthArgs): Promise<AuthAdmin | null> {
         const admin = await this.validate(loginAuthArgs.email, loginAuthArgs.password)
         if (!admin) {
-            throw new NotFoundException('email or password incorrect')
+            throw new NotFoundException('อีเมล์หรือรหัสของผู้ใช้ไม่ถูกต้อง')
         }
         return this.createAuthAdmin(admin)
     }
@@ -39,7 +39,7 @@ export class AuthAdminService {
         })
         const admin = this.adminsService.getAdminByEmail(decoded.email)
         if (!admin) {
-            throw new Error('Unable to get the admin from decoded token.')
+            throw new Error('ไม่สามารถหาอีเมล์ของแอดมินได้') //Unable to get the admin from decoded token.
         }
         return admin
     }
@@ -47,7 +47,7 @@ export class AuthAdminService {
     public async getMe(email: string): Promise<Admin | null> {
         const admin = await this.adminsService.getAdminByEmail(email)
         if (! admin) {
-            throw new NotFoundException('not found admin by email')
+            throw new NotFoundException('ไม่สามารถหาอีเมล์ของแอดมินได้')
         }
         return this.createAuthAdmin(admin)
     }

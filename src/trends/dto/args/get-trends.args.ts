@@ -4,6 +4,6 @@ import { IsNotEmpty } from "class-validator";
 @ArgsType()
 export class GetTrendsArgs {
     @Field(() => [String])
-    @IsNotEmpty()
+    @IsNotEmpty({ message: 'กรุณาใส่ไอดีของเทรน' })
     _ids: string[]
 }

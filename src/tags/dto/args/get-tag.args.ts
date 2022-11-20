@@ -4,6 +4,6 @@ import { IsNotEmpty } from "class-validator";
 @ArgsType()
 export class GetTagArgs {
     @Field()
-    @IsNotEmpty()
+    @IsNotEmpty({ message: 'กรุณาใส่แท็กการรายงาน' })
     tag: string
 }

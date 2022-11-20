@@ -6,12 +6,12 @@ import { VerifyEnum } from "src/tags/enum/verify.enum"
 export class UpdateTagInput {
 
     @Field()
-    @IsNotEmpty()
+    @IsNotEmpty({ message: 'ไอดียังว่างอยู่' })
     @IsString()
     _id: string
 
     @Field()
-    @IsNotEmpty()
+    @IsNotEmpty({ message: 'ยังไม่มีสถานะ' })
     @IsEnum(VerifyEnum)
     status: VerifyEnum
 }

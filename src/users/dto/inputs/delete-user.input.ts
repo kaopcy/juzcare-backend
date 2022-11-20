@@ -4,7 +4,7 @@ import { IsNotEmpty, IsString } from "class-validator";
 @InputType()
 export class DeleteUserInput {
     @Field()
-    @IsNotEmpty()
+    @IsNotEmpty({ message: 'กรุณากรอกไอดี' })
     @IsString()
     _id: string
 }

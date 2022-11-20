@@ -35,7 +35,7 @@ export class Admin {
 export const AdminSchema = SchemaFactory.createForClass(Admin)
 .post('save', function (error, doc, next) {
     if (error.name === 'MongoServerError' && error.code === 11000) {
-        next(new NotAcceptableException('email must be unique'));
+        next(new NotAcceptableException('อีเมล์นี้ถูกใช้งานแล้ว'));
     } else {
         next(error);
     }

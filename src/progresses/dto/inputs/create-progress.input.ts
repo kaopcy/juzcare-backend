@@ -6,12 +6,12 @@ import { Media } from "src/medias/models/media"
 @InputType()
 export class CreateProgressInput {
     @Field()
-    @IsNotEmpty()
+    @IsNotEmpty({ message: 'กรุณากรอกไอดีรายงาน' })
     @IsString()
     reportId: string
 
     @Field()
-    @IsNotEmpty({ message: 'please fill detail' })
+    @IsNotEmpty({ message: 'กรุณากรอกรายละเอียด' })
     @IsString()
     detail: string
 
