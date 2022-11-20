@@ -21,6 +21,7 @@ import { OrderEnum, SortEnum } from './dto/enum/query.enum';
 import { length, project } from './dto/pipeline/aggregate.pipeline';
 import { PaginateReport } from './models/paginate.report';
 import { GetPopularTagsArgs } from './dto/args/get-popular-tags.args';
+import { DeleteReportInput } from './dto/inputs/delete-report.input';
 
 @Injectable()
 export class ReportsService {
@@ -281,5 +282,14 @@ export class ReportsService {
             }
         ])
         return _tags
+    }
+
+    async deleteReport(deleteReportData: DeleteReportInput): Promise<Report> {
+        const report = await this.reportModel.findById(deleteReportData._id)
+        const deleted_report = await this.reportModel.deleteOne({ _id: deleteReportData._id }).exec()
+        if (deleted_report.deletedCount === 0) {
+            throw new NotFoundException('Could not find user id.')
+        }
+        return report
     }
 }
