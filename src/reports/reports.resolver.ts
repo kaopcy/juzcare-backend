@@ -48,10 +48,16 @@ export class ReportsResolver {
         return this.reportsService.findByReportId(getReportArgs._id)
     }
 
-    @Query(() => [Report], { nullable: true })
-    @UseGuards(GqlAuthGuard)
-    async reports(@Args() getReportsArgs: GetReportsArgs) {
-        return this.reportsService.findMany(getReportsArgs)
+    // @Query(() => [Report], { nullable: true })
+    // @UseGuards(GqlAuthGuard)
+    // // @UseInterceptors(UpdateFlowInterceptor)
+    // async reports(@Args() getReportsArgs: GetReportsArgs) {
+    //     return this.reportsService.findMany(getReportsArgs)
+    // }
+
+    @Query(() => PaginateReport, { nullable: true })
+    async reports(@Args() getReportsArgs: GetReportsArgs): Promise<PaginateReport> {
+        return await this.reportsService.findMany(getReportsArgs)
     }
 
     @Mutation(() => Report)
