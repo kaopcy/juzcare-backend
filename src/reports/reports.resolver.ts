@@ -36,6 +36,7 @@ import { GetReportsArgs } from './dto/args/get-reports.args';
 import { PaginateReport } from './models/paginate.report';
 import { GetPopularTagsArgs } from './dto/args/get-popular-tags.args';
 import { AggregateTags } from 'src/tags/models/aggregate.tags';
+import { DeleteReportInput } from './dto/inputs/delete-report.input';
 @Resolver(() => Report)
 export class ReportsResolver {
     constructor(
@@ -166,5 +167,10 @@ export class ReportsResolver {
     @Query(() => [AggregateTags], { nullable: true })
     async getPopularTags(@Args() tag: GetPopularTagsArgs) {
         return this.reportsService.getPopularTags(tag)
+    }
+
+    @Mutation(() => Report)
+    async deleteReport(@Args('deleteReportData') deleteReportData: DeleteReportInput): Promise<Report>{
+        return this.reportsService.deleteReport(deleteReportData)
     }
 }

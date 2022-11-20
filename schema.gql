@@ -198,6 +198,7 @@ type Mutation {
   updateStatusReport(updateStatusReportData: UpdateStatusReportInput!): Report!
   upVoteReport(_id: String!): Report!
   updateReviewReport(updateReviewReportData: UpdateReviewReportInput!): Report!
+  deleteReport(deleteReportData: DeleteReportInput!): Report!
   createLocation(locationData: CreateLocationInput!): Location!
   createTag(createTagData: CreateTagInput!): Tag!
   updateStatusTag(updateTagData: UpdateTagInput!): Tag!
@@ -278,6 +279,10 @@ input UpdateReviewReportInput {
   description: String!
   medias: [CreateMediaInput!]
   star: Float!
+}
+
+input DeleteReportInput {
+  _id: String!
 }
 
 input CreateLocationInput {
