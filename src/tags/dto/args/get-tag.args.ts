@@ -5,5 +5,5 @@ import { IsNotEmpty } from "class-validator";
 export class GetTagArgs {
     @Field()
     @IsNotEmpty()
-    _id: string
+    tag: string
 }
