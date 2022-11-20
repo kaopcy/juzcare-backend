@@ -23,9 +23,11 @@ import { NotificationService } from 'src/notification/notification.service';
 import { Notification, NotificationSchema } from 'src/notification/models/notifications';
 import { Trend, TrendSchema } from 'src/trends/models/trend';
 import { TrendsService } from 'src/trends/trends.service';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
+    ScheduleModule.forRoot(),
     MongooseModule.forFeature([
       { name: Report.name, schema: ReportSchema },
       { name: User.name, schema: UserSchema },

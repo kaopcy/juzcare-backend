@@ -13,14 +13,6 @@ export class TrendsService {
     async updateTrends(reports: Report[]): Promise<Report[]> {
         await this.trendModel.deleteMany({})
         await this.trendModel.create({reports: reports.map((r) => (r._id.toString()))})
-        // const trend = await this.trendModel.create({reports: [reports[0]._id]})
-        // if (reports.length - 1) {
-        //     for (let i = 1; i < reports.length; i++) {
-        //         await this.trendModel.findByIdAndUpdate(trend._id,{ $push : {reports : reports[i]._id}})
-        //     }
-        // }
-        // console.log(await this.trendModel.findById(trend._id));
-        
         return
     }
 

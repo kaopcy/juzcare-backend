@@ -1,5 +1,12 @@
 import { UseGuards } from '@nestjs/common';
-import { Args, Mutation, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
+import {
+  Args,
+  Mutation,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql';
 import { AdminsService } from 'src/admins/admins.service';
 import { Admin } from 'src/admins/models/admin';
 import { CurrentUser } from 'src/auth/current-user.args';
