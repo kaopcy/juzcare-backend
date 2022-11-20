@@ -26,7 +26,9 @@ import { Report } from './models/report';
 import { Review } from './models/review';
 import { ReportsService } from './reports.service';
 import { GetReportsArgs } from './dto/args/get-reports.args';
-
+import { PaginateReport } from './models/paginate.report';
+import { GetPopularTagsArgs } from './dto/args/get-popular-tags.args';
+import { AggregateTags } from 'src/tags/models/aggregate.tags';
 @Resolver(() => Report)
 export class ReportsResolver {
     constructor(
