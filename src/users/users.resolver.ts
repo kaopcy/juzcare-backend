@@ -41,8 +41,8 @@ export class UsersResolver {
 
     @Mutation(() => User, { nullable: true })
     @UseGuards(GqlAuthGuard)
-    async updateUser(@Args('updateUserData') updateUserData: UpdateUserInput): Promise<User> {
-        return this.usersService.updateUser(updateUserData)
+    async updateUser(@CurrentUser() user: User, @Args('updateUserData') updateUserData: UpdateUserInput): Promise<User> {
+        return this.usersService.updateUser(user._id, updateUserData)
     }
 
     @ResolveField(() => Avatar, { nullable: true })

@@ -16,11 +16,11 @@ export class GetReportsArgs {
     @IsEnum(OrderEnum)
     order: OrderEnum
 
-    @Field()
-    @IsEnum(FilterEnum)
-    filter: FilterEnum
+    @Field(() => [String])
+    // @IsEnum([FilterEnum])
+    filter: FilterEnum[]
 
-    @Field(() => [String], {name:'tags',nullable: true})
+    @Field(() => [String], {name:'tags'})
     tags: string[]
 
     @Field(() => Int)
