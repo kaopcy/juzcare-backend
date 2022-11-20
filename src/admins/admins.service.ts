@@ -56,6 +56,11 @@ export class AdminsService {
         return admin
     }
 
+    public async isAdmin(_id: string): Promise<boolean> {
+        const admin = await this.findById(_id)
+        return (admin) ? true: false
+    }
+
     public async verifyAdminRole(_id: string) {
         const admin = await this.findById(_id)
         if (! admin) {
