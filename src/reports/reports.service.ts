@@ -79,7 +79,7 @@ export class ReportsService {
     async upVoteReport(user: User, reportId: string): Promise<Report> {
         const report = await this.findByReportId(reportId);
         if (!report) {
-            throw new NotFoundException('report id not found');
+            throw new NotFoundException('ไม่สามารถหาการรายงานนั้นได้');
         }
         const isUpVoted = await this.reportModel.find({
             _id: reportId,
@@ -107,7 +107,7 @@ export class ReportsService {
     async addComment(user: User, commentData: CreateCommentInput,): Promise<Report> {
         const report = await this.findByReportId(commentData.reportId);
         if (!report) {
-            throw new NotFoundException('report id not found');
+            throw new NotFoundException('ไม่สามารถหาการรายงานนั้นได้');
         }
         const comment = await this.commentsService.createComment({
             user: user,
@@ -137,7 +137,7 @@ export class ReportsService {
     async addProgress(user: User, progressData: CreateProgressInput,): Promise<Report> {
         const report = await this.findByReportId(progressData.reportId);
         if (!report) {
-            throw new NotFoundException('report id not found');
+            throw new NotFoundException('ไม่สามารถหาการรายงานนั้นได้');
         }
         const progress = await this.progressesService.createProgress(
             user,
@@ -153,7 +153,7 @@ export class ReportsService {
     async updateReviewReport(user: User, updateReviewData: UpdateReviewReportInput,): Promise<Report> {
         const _report = await this.findByReportId(updateReviewData.reportId);
         if (user._id.toString() !== _report.user._id.toString()) {
-            throw new NotFoundException('Not report owner');
+            throw new NotFoundException('ต้องเป็นเจ้าของรายงานนั้นเท่านั้น');
         }
         const _medias = [];
         if (updateReviewData.medias?.length) {

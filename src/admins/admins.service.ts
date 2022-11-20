@@ -38,7 +38,7 @@ export class AdminsService {
         const user = await this.findById(deleteAdminData._id)
         const deleted_user = await this.adminModel.deleteOne({ _id: deleteAdminData._id }).exec()
         if (deleted_user.deletedCount === 0) {
-            throw new NotFoundException('Could not find admin id.')
+            throw new NotFoundException('ไม่สามารถหาบัญชีผู้ใช้แอดมินได้')
         }
         return user
     }
@@ -48,7 +48,7 @@ export class AdminsService {
         try {
             admin = await this.adminModel.findById(_id).exec()
         } catch (error) {
-            throw new NotFoundException('Could not find admin id.')
+            throw new NotFoundException('ไม่สามารถหาบัญชีผู้ใช้แอดมินได้')
         }
         if (!admin) {
             return null
@@ -59,7 +59,7 @@ export class AdminsService {
     public async verifyAdminRole(_id: string) {
         const admin = await this.findById(_id)
         if (! admin) {
-            throw new NotFoundException('Only admin role.')
+            throw new NotFoundException('บัญชีผู้ใช้ต้องเป็นแอดมินเท่านั้น')
         }
     }
 

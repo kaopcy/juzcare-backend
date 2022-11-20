@@ -31,7 +31,7 @@ export class AuthUserService {
     public async login(loginAuthArgs: LoginAuthArgs): Promise<AuthUser | null> {
         const user = await this.validate(loginAuthArgs.email, loginAuthArgs.password)
         if (!user) {
-            throw new NotFoundException('email or password incorrect')
+            throw new NotFoundException('อีเมล์หรือรหัสของผู้ใช้ไม่ถูกต้อง')
         }
         return this.createAuthUser(user)
     }

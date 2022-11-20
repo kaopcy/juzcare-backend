@@ -48,7 +48,7 @@ export class TagsService {
     async findById(_id: string): Promise<Tag> {
         const tag = await this.tagModel.findById(_id)
         if (! tag) {
-            throw new NotFoundException('tag id not found')
+            throw new NotFoundException('ไม่สามารถหาแท็กนั้นได้')
         }
         return tag
     }
