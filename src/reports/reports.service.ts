@@ -209,6 +209,7 @@ export class ReportsService {
 
     async findMany(getReportsArgs: GetReportsArgs): Promise<PaginateReport> {
         const { sort, order, filter, tags, page, pageAmount } = getReportsArgs
+        const checkTags = tags.filter((f)=>(f != ""))
         const reports = await this.reportModel.aggregate([
             { $match: { 'status.type': { $in: filter.length ? filter : ["UNVERIFIED", "VERIFIED", "INPROGRESS", "COMPLETE"] } } },
             {
@@ -222,7 +223,7 @@ export class ReportsService {
             },
             {
                 $project: {
-                    ...project, ...length, ...  { 'isTags': { $gt: [{ $size: { $setIntersection: [tags, '$_tags.name'] } }, 0] } }
+                    ...project, ...length, ...  { 'isTags': { $gt: [{ $size: { $setIntersection: [checkTags, '$_tags.name'] } }, 0] } }
                 }
             },
             {
@@ -232,7 +233,7 @@ export class ReportsService {
                         ? { 'commentsLength': order == OrderEnum.ascending ? 1 : -1 } :
                         { 'createdAt': order == OrderEnum.ascending ? 1 : -1 }
             },
-            { $match: { 'isTags': (tags.length) ? true : false } },
+            { $match: { 'isTags': (checkTags.length) ? true : false } },
             { $project: { ...project, } },
         ])
         const nextPage = ((page + 1) * pageAmount < reports.length) ? page + 1 : -1
@@ -263,9 +264,6 @@ export class ReportsService {
                     }
                 }
             },
-            // {
-            //     $match: { returnObject: { $ne: null }, }
-            // },
             {
                 $match: { returnObject: { $ne: null }, '_id.status': { $eq: 'VERIFIED' } }
             },
