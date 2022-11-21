@@ -1,7 +1,8 @@
 import { Field, InputType } from "@nestjs/graphql"
-import { IsNotEmpty, IsString } from "class-validator"
+import { IsEnum, IsNotEmpty, IsString } from "class-validator"
 import { Report } from "src/reports/models/report"
 import { User } from "src/users/models/user"
+import { NotifyTypeEnum } from "../enum/notify.enum"
 
 @InputType()
 export class CreateNotificationInput {
@@ -21,8 +22,8 @@ export class CreateNotificationInput {
 
     @Field()
     @IsNotEmpty({ message: 'ยังไม่มีรายละเอียด' })
-    @IsString()
-    type: string
+    @IsEnum(NotifyTypeEnum)
+    type: NotifyTypeEnum
 
 
 }
