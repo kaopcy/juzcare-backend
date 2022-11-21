@@ -5,6 +5,7 @@ import { GetNotificationArgs } from './dto/args/get-notification.args';
 import { GetNotificationByUserIdArgs } from './dto/args/get-notificationByUserId.args';
 import { CreateNotificationInput } from './dto/inputs/create-notification.input';
 import { UpdateNotificationInput } from './dto/inputs/update-notification.input';
+import { DetailFactory } from './factory-detail/detail-factory';
 import { Notification, NotificationDocument } from './models/notifications';
 
 @Injectable()
@@ -16,34 +17,36 @@ export class NotificationService {
 
   async createNotification(createNotificationData: CreateNotificationInput) {
     // const { isWatch, userId } = createNotificationData
-    let _detail: string;
-    const { firstName, lastName } = createNotificationData.user;
-    const { title } = createNotificationData.report;
-
-    if (createNotificationData.type === 'UPVOTE') {
-      _detail = `คุณ ${firstName} ${lastName}: เห็นด้วยกับการรายงาน "${title}" ของคุณ `;
-    } else if (createNotificationData.type === 'COMMENT') {
-      _detail = `คุณ ${firstName} ${lastName}: แสดงความคิดเห็นในรายงาน "${title}" ของคุณ `;
-    } else if (createNotificationData.type === 'TREND') {
-      _detail = `รายงาน "${title}" ของคุณมีผู้สนใจเป็นจำนวนมาก `;
-    } else if (createNotificationData.type === 'VERIFIED') {
-      _detail = `รายงาน "${title}" ของคุณได้รับการอนุมัติ `;
-    } else if (createNotificationData.type === 'VERIFIED') {
-      _detail = `รายงาน "${title}" ของคุณได้รับการอนุมัติ `;
-    } else if (createNotificationData.type === 'INPROCESS') {
-      _detail = `รายงาน "${title}" ของคุณกำลังดำเนินการ `;
-    } else if (createNotificationData.type === 'COMPLETE') {
-      _detail = `รายงาน "${title}" ของคุณเสร็จสิ้น `;
-    }
+    // let _detail: string;
+    const { user, report, type } = createNotificationData
+    console.log("noti",user, report);
+    
+    // if (createNotificationData.type === 'UPVOTE') {
+    //   _detail = `คุณ ${user.firstName} ${lastName}: เห็นด้วยกับการรายงาน "${title}" ของคุณ `;
+    // } else if (createNotificationData.type === 'COMMENT') {
+    //   _detail = `คุณ ${firstName} ${lastName}: แสดงความคิดเห็นในรายงาน "${title}" ของคุณ `;
+    // } else if (createNotificationData.type === 'TREND') {
+    //   _detail = `รายงาน "${title}" ของคุณมีผู้สนใจเป็นจำนวนมาก `;
+    // } else if (createNotificationData.type === 'VERIFIED') {
+    //   _detail = `รายงาน "${title}" ของคุณได้รับการอนุมัติ `;
+    // } else if (createNotificationData.type === 'VERIFIED') {
+    //   _detail = `รายงาน "${title}" ของคุณได้รับการอนุมัติ `;
+    // } else if (createNotificationData.type === 'INPROCESS') {
+    //   _detail = `รายงาน "${title}" ของคุณกำลังดำเนินการ `;
+    // } else if (createNotificationData.type === 'COMPLETE') {
+    //   _detail = `รายงาน "${title}" ของคุณเสร็จสิ้น `;
+    // }
     // console.log(createNotificationData);
 
-    const _noti = {
-      userId: createNotificationData.user._id.toString(),
-      reportId: createNotificationData.report._id.toString(),
-      detail: _detail,
-      type: createNotificationData.type,
+    // const _notification = DetailFactory.generateNotificationObject(createNotificationData)
+
+    const _notification = {
+      userId: report.user._id.toString(),
+      reportId: report._id.toString(),
+      detail: DetailFactory.createDetail(user, report, type),
+      type: type,
     };
-    await this.notificationModel.create(_noti);
+    await this.notificationModel.create(_notification);
     return;
   }
 

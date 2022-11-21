@@ -22,10 +22,11 @@ import { length, project } from './dto/pipeline/aggregate.pipeline';
 import { PaginateReport } from './models/paginate.report';
 import { GetPopularTagsArgs } from './dto/args/get-popular-tags.args';
 import { DeleteReportInput } from './dto/inputs/delete-report.input';
+import { NotifyTypeEnum } from 'src/notification/dto/enum/notify.enum';
 
 @Injectable()
 export class ReportsService {
-    constructor(
+    constructor( 
         @InjectModel(Report.name)
         private readonly reportModel: Model<ReportDocument>,
         private readonly mediasService: MediasService,
@@ -74,6 +75,8 @@ export class ReportsService {
     }
 
     async upVoteReport(user: User, reportId: string): Promise<Report> {
+        // console.log('user',user);
+        
         const report = await this.findByReportId(reportId);
         if (!report) {
             throw new NotFoundException('ไม่สามารถหาการรายงานนั้นได้');
@@ -90,7 +93,7 @@ export class ReportsService {
             await this.notificationService.createNotification({
                 user,
                 report,
-                type: 'UPVOTE',
+                type: NotifyTypeEnum.upVote,
             });
         } else {
             await this.reportModel.findByIdAndUpdate(reportId, {
@@ -117,7 +120,7 @@ export class ReportsService {
         await this.notificationService.createNotification({
             user,
             report,
-            type: 'COMMENT',
+            type: NotifyTypeEnum.comment,
         });
         return await this.findByReportId(commentData.reportId);
     }
