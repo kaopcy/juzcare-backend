@@ -26,7 +26,7 @@ import { NotifyTypeEnum } from 'src/notification/dto/enum/notify.enum';
 
 @Injectable()
 export class ReportsService {
-    constructor( 
+    constructor(
         @InjectModel(Report.name)
         private readonly reportModel: Model<ReportDocument>,
         private readonly mediasService: MediasService,
@@ -35,8 +35,8 @@ export class ReportsService {
         private readonly progressesService: ProgressesService,
         private readonly notificationService: NotificationService,
         private readonly trendsService: TrendsService,
-        ) { }
-    
+    ) { }
+
     private readonly logger = new Logger(ReportsService.name);
 
     async createReport(user: User, reportData: CreateReportInput,): Promise<Report> {
@@ -76,7 +76,7 @@ export class ReportsService {
 
     async upVoteReport(user: User, reportId: string): Promise<Report> {
         // console.log('user',user);
-        
+
         const report = await this.findByReportId(reportId);
         if (!report) {
             throw new NotFoundException('ไม่สามารถหาการรายงานนั้นได้');
@@ -185,11 +185,11 @@ export class ReportsService {
         const _reports = reports.filter(r => {
             return !this._idReportsInTrend.includes(r._id.toString())
         })
-        if (_reports.length < 5 ) {
-            this._idReportsInTrend = [ ...this._idReportsInTrend, ..._reports.map(r => r._id.toString())]
+        if (_reports.length < 5) {
+            this._idReportsInTrend = [...this._idReportsInTrend, ..._reports.map(r => r._id.toString())]
             await this.trendsService.updateTrends(_reports)
         } else {
-            this._idReportsInTrend = [ ...this._idReportsInTrend, ..._reports.slice(0, 5).map(r => r._id.toString())]
+            this._idReportsInTrend = [...this._idReportsInTrend, ..._reports.slice(0, 5).map(r => r._id.toString())]
             await this.trendsService.updateTrends(_reports.slice(0, 5))
         }
         this._idReportsInTrend = this._idReportsInTrend.filter(id => {
@@ -213,7 +213,7 @@ export class ReportsService {
 
     async findMany(getReportsArgs: GetReportsArgs): Promise<PaginateReport> {
         const { sort, order, filter, tags, page, pageAmount } = getReportsArgs
-        const checkTags = tags.filter((f)=>(f != ""))
+        const checkTags = tags.filter((f) => (f != ""))
         const reports = await this.reportModel.aggregate([
             { $match: { 'status.type': { $in: filter.length ? filter : ["UNVERIFIED", "VERIFIED", "INPROGRESS", "COMPLETE"] } } },
             {
@@ -244,6 +244,11 @@ export class ReportsService {
         return { reports: reports.slice(page * pageAmount, (page + 1) * pageAmount), nextPage, currentPage: page }
     }
 
+    async findReportsByUser(user: User): Promise<Report[]> {
+        const reports = await this.reportModel.find({user: user})
+        return reports
+    }
+
     async getPopularTags(tag: GetPopularTagsArgs) {
         const _tags = await this.reportModel.aggregate([
             {
@@ -263,7 +268,7 @@ export class ReportsService {
             {
                 $addFields: {
                     returnObject: {
-                        $regexFind: { input: { $toLower:"$_id.name"}, regex: { $toLower: tag.name} }
+                        $regexFind: { input: { $toLower: "$_id.name" }, regex: { $toLower: tag.name } }
                     }
                 }
             },
