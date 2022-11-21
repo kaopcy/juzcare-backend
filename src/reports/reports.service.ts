@@ -144,7 +144,7 @@ export class ReportsService {
             progressData,
         );
         await this.reportModel.findByIdAndUpdate(progressData.reportId, {
-            $push: { comments: progress._id },
+            $push: { progresses: progress._id },
             new: true,
         });
         return await this.findByReportId(progressData.reportId);
