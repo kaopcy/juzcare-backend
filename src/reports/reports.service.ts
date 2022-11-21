@@ -245,7 +245,7 @@ export class ReportsService {
     }
 
     async findReportsByUser(user: User): Promise<Report[]> {
-        const reports = await this.reportModel.find({user: user})
+        const reports = await this.reportModel.find({user: user}).sort('-createdAt')
         return reports
     }
 
