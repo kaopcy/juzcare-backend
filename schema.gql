@@ -173,6 +173,7 @@ type Query {
   admin(_id: String!): Admin
   report(_id: String!): Report
   reports(sort: String!, order: String!, filter: [String!]!, tags: [String!]!, page: Int!, pageAmount: Int!): PaginateReport
+  findReportsByUserId: [Report!]
   trends: [Report!]
   getPopularTags(name: String!): [AggregateTags!]
   location(_id: [String!]!): Location!

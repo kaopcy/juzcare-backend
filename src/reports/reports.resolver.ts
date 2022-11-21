@@ -67,6 +67,12 @@ export class ReportsResolver {
         return await this.reportsService.findMany(getReportsArgs)
     }
 
+    @Query(() => [Report], { nullable: true })
+    @UseGuards(GqlAuthGuard)
+    async findReportsByUserId(@CurrentUser() user: User): Promise<Report[]> {
+        return await this.reportsService.findReportsByUser(user)
+    }
+
     @Mutation(() => Report)
     @UseGuards(GqlAuthGuard)
     async createReport(@CurrentUser() user: User, @Args('createReportData') reportData: CreateReportInput): Promise<Report> {
