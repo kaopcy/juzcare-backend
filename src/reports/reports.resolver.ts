@@ -108,12 +108,14 @@ export class ReportsResolver {
 
     @ResolveField(() => [Comment], {nullable: true})
     async comments(@Parent() report: Report) {
-        return this.commentsService.getComments({_ids: report.comments.map((c)=>c._id.toString())})
+        const _comments = report.comments.reverse()
+        return this.commentsService.getComments({_ids: _comments.reverse().map((c)=>c._id.toString())})
     }
 
     @ResolveField(() => [Progress], {nullable: true})
     async progresses(@Parent() report: Report) {
-        return this.progressesService.getProgresses({_ids: report.comments.map((c)=>c._id.toString())})
+        const _progresses = report.progresses.reverse()
+        return this.progressesService.getProgresses({_ids: _progresses.map((c)=>c._id.toString())})
     }
 
     @ResolveField(() => Tag, {nullable: true})
