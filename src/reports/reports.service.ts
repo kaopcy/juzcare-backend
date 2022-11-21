@@ -238,7 +238,6 @@ export class ReportsService {
             { $project: { ...project, } },
         ])
         const nextPage = ((page + 1) * pageAmount < reports.length) ? page + 1 : -1
-        await this.updateTrends()
         return { reports: reports.slice(page * pageAmount, (page + 1) * pageAmount), nextPage, currentPage: page }
     }
 
