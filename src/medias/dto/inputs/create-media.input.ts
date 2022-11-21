@@ -4,7 +4,7 @@ import { IsNotEmpty, IsString } from "class-validator"
 @InputType()
 export class CreateMediaInput {
     @Field()
-    @IsNotEmpty()
+    @IsNotEmpty({ message: 'กรุณาใส่ลิงก์' })
     @IsString()
     imageUrl: string
 }

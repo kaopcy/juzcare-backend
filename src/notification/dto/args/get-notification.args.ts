@@ -4,6 +4,6 @@ import { IsNotEmpty } from "class-validator";
 @ArgsType()
 export class GetNotificationArgs {
     @Field()
-    @IsNotEmpty()
+    @IsNotEmpty({ message: 'ไอดีว่างอยู่' })
     _id: string;
 }

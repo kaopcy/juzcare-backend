@@ -31,7 +31,7 @@ export class AuthUserService {
     public async login(loginAuthArgs: LoginAuthArgs): Promise<AuthUser | null> {
         const user = await this.validate(loginAuthArgs.email, loginAuthArgs.password)
         if (!user) {
-            throw new NotFoundException('email or password incorrect')
+            throw new NotFoundException('อีเมล์หรือรหัสของผู้ใช้ไม่ถูกต้อง')
         }
         return this.createAuthUser(user)
     }
@@ -42,7 +42,7 @@ export class AuthUserService {
         })
         const user = this.usersService.getUserByEmail(decoded.email)
         if (!user) {
-            throw new Error('Unable to get the user from decoded token.')
+            throw new Error('ไม่สามารถหาชื่อผู้ใช้ได้')
         }
         return user
     }
@@ -50,7 +50,7 @@ export class AuthUserService {
     public async getMe(email: string): Promise<AuthUser | null> {
         const user = await this.usersService.getUserByEmail(email)
         if (! user) {
-            throw new NotFoundException('not found user by email')
+            throw new NotFoundException('ไม่สามารถหาชื่อผู้ใช้ได้')
         }
         return this.createAuthUser(user)
     }

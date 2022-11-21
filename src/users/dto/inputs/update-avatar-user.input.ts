@@ -5,7 +5,7 @@ import { IsNotEmpty, IsString } from "class-validator"
 @InputType()
 export class UpdateAvatarUserInput {
     @Field(() => ID)
-    @IsNotEmpty()
+    @IsNotEmpty({ message: 'กรุณากรอกอวตารไอดี' })
     @IsString()
     avatarId: string
 }

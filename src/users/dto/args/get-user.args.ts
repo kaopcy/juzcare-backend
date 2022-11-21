@@ -4,6 +4,6 @@ import { IsNotEmpty } from "class-validator";
 @ArgsType()
 export class GetUserArgs {
     @Field()
-    @IsNotEmpty()
+    @IsNotEmpty({ message: 'กรุณากรอกไอดี' })
     _id: string
 }

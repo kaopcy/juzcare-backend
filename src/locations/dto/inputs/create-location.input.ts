@@ -14,7 +14,7 @@ export class CreateLocationInput {
     // userId: string
 
     @Field()
-    @IsNotEmpty({ message: 'please fill location comment' })
+    @IsNotEmpty({ message: 'กรุณากรอกรายละเอียดของตำแหน่ง' })
     @IsString()
     @IsNotEmpty()
     @MaxLength(200)

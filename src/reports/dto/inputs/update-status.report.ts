@@ -5,12 +5,12 @@ import { FilterEnum } from "../enum/query.enum"
 @InputType()
 export class UpdateStatusReportInput {
     @Field()
-    @IsNotEmpty()
+    @IsNotEmpty({ message: 'ไอดีของรายงานว่างอยู่' })
     @IsString()
     reportId: string
 
     @Field()
-    @IsNotEmpty()
+    @IsNotEmpty({ message: 'ยังไม่มีสถานะ' })
     @IsEnum(FilterEnum, {message: 'type in not in VERIFIED | INPROGRESS | COMPLETE'})
     type: FilterEnum
 }

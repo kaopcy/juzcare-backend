@@ -14,7 +14,7 @@ export class LocationsService {
     async getLocation(getLocationArgs: GetLocationArgs): Promise<Location> {
         const location = await this.locationModel.findById(getLocationArgs._id)
         if (!location) {
-            throw new NotFoundException('location id not found')
+            throw new NotFoundException('ไม่สามารถหาไอดีของสถานที่นั้นได้')
         }
         return location
     }

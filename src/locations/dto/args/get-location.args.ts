@@ -4,6 +4,6 @@ import { IsNotEmpty } from "class-validator";
 @ArgsType()
 export class GetLocationArgs {
     @Field(() => [String])
-    @IsNotEmpty()
+    @IsNotEmpty({ message: 'ไอดีโลเคชั่นว่างอยู่' })
     _id: string[]
 }

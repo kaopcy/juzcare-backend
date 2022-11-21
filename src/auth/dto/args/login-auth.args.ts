@@ -4,10 +4,10 @@ import { IsNotEmpty } from "class-validator";
 @ArgsType()
 export class LoginAuthArgs {
     @Field()
-    @IsNotEmpty()
+    @IsNotEmpty({ message: 'กรุณากรอกอีเมล์' })
     email: string
 
     @Field()
-    @IsNotEmpty()
+    @IsNotEmpty({ message: 'กรุณากรอกรหัสผ่าน' })
     password: string
 }

@@ -4,27 +4,27 @@ import { IsEmail, IsNotEmpty, IsString } from "class-validator"
 @InputType()
 export class CreateAdminInput {
     @Field()
-    @IsNotEmpty()
+    @IsNotEmpty({ message: 'กรุณากรอกอีเมล์' })
     @IsEmail()
     email: string
     
     @Field()
-    @IsNotEmpty()
+    @IsNotEmpty({ message: 'กรุณากรอกชื่อผู้ใช้' })
     @IsString()
     username: string
     
     @Field()
-    @IsNotEmpty()
+    @IsNotEmpty({ message: 'กรุณากรอกรหัสผ่าน' })
     @IsString()
     password: string
     
     @Field()
-    @IsNotEmpty()
+    @IsNotEmpty({ message: 'กรุณากรอกชื่อจริง' })
     @IsString()
     firstName: string
     
     @Field()
-    @IsNotEmpty()
+    @IsNotEmpty({ message: 'กรุณากรอกนามสกุล' })
     @IsString()
     lastName: string
 }

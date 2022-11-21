@@ -13,7 +13,7 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
     validate(email: string, password: string): Promise<User> {
         const user = this.authService.validate(email, password)
         if (!user) {
-            throw new UnauthorizedException()
+            throw new UnauthorizedException('ตรวจสอบอีเมล์และรหัสผ่าน')
         }
         return user
     }

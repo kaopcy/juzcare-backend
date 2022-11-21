@@ -6,12 +6,12 @@ import { User } from "src/users/models/user"
 @InputType()
 export class CreateNotificationInput {
     @Field()
-    @IsNotEmpty()
+    @IsNotEmpty({ message: 'ยังไม่มีการรายงาน' })
     @IsString()
     report: Report
 
     @Field()
-    @IsNotEmpty()
+    @IsNotEmpty({ message: 'ยังไม่มีผู้ใช้' })
     user: User
 
     // @Field()
@@ -20,7 +20,7 @@ export class CreateNotificationInput {
     // detail: string
 
     @Field()
-    @IsNotEmpty()
+    @IsNotEmpty({ message: 'ยังไม่มีรายละเอียด' })
     @IsString()
     type: string
 

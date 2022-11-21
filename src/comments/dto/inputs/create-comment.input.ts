@@ -4,7 +4,7 @@ import { IsNotEmpty, IsString, MaxLength } from "class-validator"
 @InputType()
 export class CreateCommentInput {
     @Field()
-    @IsNotEmpty()
+    @IsNotEmpty({ message: 'กรุณากรอกไอดีของรายงาน' })
     @IsString()
     reportId: string
 
@@ -14,9 +14,8 @@ export class CreateCommentInput {
     // userId: string
 
     @Field()
-    @IsNotEmpty({ message: 'please fill body comment' })
+    @IsNotEmpty({ message: 'กรุณากรอกรายละเอียด' })
     @IsString()
-    @IsNotEmpty()
     @MaxLength(200)
     body: string
 }

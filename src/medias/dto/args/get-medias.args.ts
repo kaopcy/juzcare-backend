@@ -4,6 +4,6 @@ import { IsNotEmpty } from "class-validator";
 @ArgsType()
 export class GetMediasArgs {
     @Field(() => [String])
-    @IsNotEmpty()
+    @IsNotEmpty({ message: 'ไอดีมีเดียว่างอยู่' })
     _ids: string[]
 }
