@@ -38,6 +38,6 @@ export class ProgressesService {
         if (!getProgressesArgs._ids.length) {
             return []
         }
-        return this.progressModel.find({ _id: { $in: getProgressesArgs._ids } })
+        return this.progressModel.find({ _id: { $in: getProgressesArgs._ids } }).sort('-createdAt')
     }
 }

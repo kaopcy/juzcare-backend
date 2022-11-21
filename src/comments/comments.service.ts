@@ -21,6 +21,6 @@ export class CommentsService {
         if (!getCommentsArs._ids.length) {
             return []
         }
-        return this.commentModel.find({ _id: { $in: getCommentsArs._ids } })
+        return this.commentModel.find({ _id: { $in: getCommentsArs._ids } }).sort('-createdAt')
     }
 }
