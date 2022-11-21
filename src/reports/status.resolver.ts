@@ -9,8 +9,20 @@ export class StatusResolver {
         private readonly adminsService: AdminsService
     ) { }
 
-    @ResolveField(() => Admin, {nullable: true})
+    @ResolveField(() => Admin, { nullable: true })
     async admin(@Parent() status: Status) {
+        if (!status.admin) {
+            return {
+                _id: "null",
+                email: "null",
+                password: "null",
+                firstName: "null",
+                lastName: "null",
+                createdAt: "null",
+                updatedAt: "null",
+                __v: "null",
+            }
+        }
         return await this.adminsService.findById(status.admin._id)
     }
 }
