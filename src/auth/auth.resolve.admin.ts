@@ -10,14 +10,15 @@ import { Admin } from "src/admins/models/admin";
 import { AdminsService } from "src/admins/admins.service";
 import { CreateAdminInput } from "src/admins/dto/inputs/create-admin.input";
 import { AuthUser } from "./models/authuser";
-import { Avatar } from "src/avatars/models/avatar";
 import { AvatarsService } from "src/avatars/avatars.service";
+import { UsersService } from "src/users/users.service";
 
 @Resolver(() => AuthAdmin)
 export class AuthAdminResolver {
     constructor(
         private readonly authService: AuthAdminService,
         private readonly adminsService: AdminsService,
+        private readonly usersService: UsersService,
         private readonly avatarsService: AvatarsService,
     ) { }
 
@@ -25,15 +26,13 @@ export class AuthAdminResolver {
     async loginAdmin(@Args() loginAuthArgs: LoginAuthArgs): Promise<AuthUser> {
         // const {} = new User()
         const admin = await this.authService.login(loginAuthArgs)
-        console.log();
-        
-        return { ...admin, emailType: "", avatar: (await this.avatarsService.getAllAvatars())[0], isBanned: "", phone: "", role: "", username: "" } as unknown as AuthUser
+        return { ...admin, emailType: "", avatar: (await this.avatarsService.getAllAvatars())[0], isBanned: false, phone: "", role: "", username: "" } as unknown as AuthUser
     }
 
     @Query(() => AuthAdmin)
     @UseGuards(GqlAuthGuard)
     async getMeAdmin(@CurrentUser() admin: Admin) {
-        return this.authService.getMe(admin.email)
+        return this.authService.getMeAdmin(admin.email)
     }
 
     // @Query(() => AuthAdmin)
@@ -51,6 +50,6 @@ export class AuthAdminResolver {
     @Mutation(() => User)
     @UseGuards(GqlAuthGuard)
     async deleteAdmin(@CurrentUser() user: User): Promise<Admin | null> {
-        return this.adminsService.deleteAdmin({_id: user._id})
+        return this.adminsService.deleteAdmin({ _id: user._id })
     }
 }

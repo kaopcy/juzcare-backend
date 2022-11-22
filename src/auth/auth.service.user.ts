@@ -47,7 +47,7 @@ export class AuthUserService {
         return user
     }
 
-    public async getMe(email: string): Promise<AuthUser | null> {
+    public async getMeUser(email: string): Promise<AuthUser | null> {
         const user = await this.usersService.getUserByEmail(email)
         if (! user) {
             throw new NotFoundException('ไม่สามารถหาชื่อผู้ใช้ได้')

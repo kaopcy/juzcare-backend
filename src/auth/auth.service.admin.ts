@@ -7,6 +7,7 @@ import { AdminsService } from 'src/admins/admins.service';
 import { Admin } from 'src/admins/models/admin';
 import { AuthAdmin } from './models/authadmin';
 import { CreateAdminInput } from 'src/admins/dto/inputs/create-admin.input';
+import { UsersService } from 'src/users/users.service';
 
 
 @Injectable()
@@ -44,7 +45,7 @@ export class AuthAdminService {
         return admin
     }
 
-    public async getMe(email: string): Promise<Admin | null> {
+    public async getMeAdmin(email: string): Promise<Admin | null> {
         const admin = await this.adminsService.getAdminByEmail(email)
         if (! admin) {
             throw new NotFoundException('ไม่สามารถหาอีเมล์ของแอดมินได้')

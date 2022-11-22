@@ -40,17 +40,6 @@ type Admin {
   updatedAt: DateTime!
 }
 
-type AuthAdmin {
-  _id: ID!
-  email: String!
-  password: String
-  firstName: String!
-  lastName: String!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  accessToken: String!
-}
-
 type AuthUser {
   _id: ID!
   email: String!
@@ -63,6 +52,17 @@ type AuthUser {
   role: String!
   avatar: Avatar
   isBanned: Boolean!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  accessToken: String!
+}
+
+type AuthAdmin {
+  _id: ID!
+  email: String!
+  password: String
+  firstName: String!
+  lastName: String!
   createdAt: DateTime!
   updatedAt: DateTime!
   accessToken: String!
@@ -170,6 +170,7 @@ type Query {
   rePasswordUser(oldPassword: String!, newPassword: String!): AuthUser!
   loginAdmin(email: String!, password: String!): AuthUser!
   getMeAdmin: AuthAdmin!
+  getMe: AuthUser!
   admin(_id: String!): Admin
   report(_id: String!): Report
   reports(sort: String!, order: String!, filter: [String!]!, tags: [String!]!, page: Int!, pageAmount: Int!): PaginateReport
