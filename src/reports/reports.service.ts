@@ -23,6 +23,8 @@ import { PaginateReport } from './models/paginate.report';
 import { GetPopularTagsArgs } from './dto/args/get-popular-tags.args';
 import { DeleteReportInput } from './dto/inputs/delete-report.input';
 import { NotifyTypeEnum } from 'src/notification/dto/enum/notify.enum';
+import { ReportsAggregateBuilder } from './aggregate-builder/reports-aggregate-builder';
+import { AggregateDirector } from './aggregate-builder/aggregate-director';
 
 @Injectable()
 export class ReportsService {
@@ -214,32 +216,39 @@ export class ReportsService {
     async findMany(getReportsArgs: GetReportsArgs): Promise<PaginateReport> {
         const { sort, order, filter, tags, page, pageAmount } = getReportsArgs
         const checkTags = tags.filter((f) => (f != ""))
-        const reports = await this.reportModel.aggregate([
-            { $match: { 'status.type': { $in: filter.length ? filter : ["UNVERIFIED", "VERIFIED", "INPROGRESS", "COMPLETE"] } } },
-            {
-                $lookup:
-                {
-                    from: "tags",
-                    localField: "tags",
-                    foreignField: "_id",
-                    as: "_tags"
-                }
-            },
-            {
-                $project: {
-                    ...project, ...length, ...  { 'isTags': { $gt: [{ $size: { $setIntersection: [checkTags, '$_tags.name'] } }, 0] } }
-                }
-            },
-            {
-                $sort: sort == SortEnum.sortByLike
-                    ? { 'upVotesLength': order == OrderEnum.ascending ? 1 : -1 } :
-                    sort == SortEnum.sortByComment
-                        ? { 'commentsLength': order == OrderEnum.ascending ? 1 : -1 } :
-                        { 'createdAt': order == OrderEnum.ascending ? 1 : -1 }
-            },
-            { $match: { 'isTags': (checkTags.length) ? true : false } },
-            { $project: { ...project, } },
-        ])
+        
+        const builder = new ReportsAggregateBuilder()
+        const director = new AggregateDirector()
+        director.setBuilder(builder)
+        director.buildReportsAggregate(filter, checkTags, sort, order)
+        
+        const reports = await this.reportModel.aggregate(builder.getAggregate().pipeline)
+        // const reports = await this.reportModel.aggregate([
+        //     { $match: { 'status.type': { $in: filter.length ? filter : ["UNVERIFIED", "VERIFIED", "INPROGRESS", "COMPLETE"] } } },
+        //     {
+        //         $lookup:
+        //         {
+        //             from: "tags",
+        //             localField: "tags",
+        //             foreignField: "_id",
+        //             as: "_tags"
+        //         }
+        //     },
+        //     {
+        //         $project: {
+        //             ...project, ...length, ...  { 'isTags': { $gt: [{ $size: { $setIntersection: [checkTags, '$_tags.name'] } }, 0] } }
+        //         }
+        //     },
+        //     {
+        //         $sort: sort == SortEnum.sortByLike
+        //             ? { 'upVotesLength': order == OrderEnum.ascending ? 1 : -1 } :
+        //             sort == SortEnum.sortByComment
+        //                 ? { 'commentsLength': order == OrderEnum.ascending ? 1 : -1 } :
+        //                 { 'createdAt': order == OrderEnum.ascending ? 1 : -1 }
+        //     },
+        //     { $match: { 'isTags': (checkTags.length) ? true : false } },
+        //     { $project: { ...project, } },
+        // ])
         const nextPage = ((page + 1) * pageAmount < reports.length) ? page + 1 : -1
         return { reports: reports.slice(page * pageAmount, (page + 1) * pageAmount), nextPage, currentPage: page }
     }
@@ -250,44 +259,50 @@ export class ReportsService {
     }
 
     async getPopularTags(tag: GetPopularTagsArgs) {
-        const _tags = await this.reportModel.aggregate([
-            {
-                $lookup:
-                {
-                    from: "tags",
-                    localField: "tags",
-                    foreignField: "_id",
-                    as: "_tags"
-                }
-            },
-            {
-                $unwind: '$_tags'
-            },
-            { $group: { _id: "$_tags", count: { $sum: 1 } } },
-            { $sort: { 'count': -1 } },
-            {
-                $addFields: {
-                    returnObject: {
-                        $regexFind: { input: { $toLower: "$_id.name" }, regex: { $toLower: tag.name } }
-                    }
-                }
-            },
-            {
-                $match: { returnObject: { $ne: null }, '_id.status': { $eq: 'VERIFIED' } }
-            },
-            { $skip: 0 },
-            { $limit: 10 },
-            {
-                $project: {
-                    _id: '$_id._id',
-                    name: '$_id.name',
-                    status: '$_id.status',
-                    createdAt: '$_id.createdAt',
-                    updatedAt: '$_id.updatedAt',
-                    count: '$count',
-                }
-            }
-        ])
+        const builder = new ReportsAggregateBuilder()
+        const director = new AggregateDirector()
+        director.setBuilder(builder)
+        director.buildPopularTags(tag.name, 0 ,10)
+        const _tags = await this.reportModel.aggregate(builder.getAggregate().pipeline)
+
+        // const _tags = await this.reportModel.aggregate([
+        //     {
+        //         $lookup:
+        //         {
+        //             from: "tags",
+        //             localField: "tags",
+        //             foreignField: "_id",
+        //             as: "_tags"
+        //         }
+        //     },
+        //     {
+        //         $unwind: '$_tags'
+        //     },
+        //     { $group: { _id: "$_tags", count: { $sum: 1 } } },
+        //     { $sort: { 'count': -1 } },
+        //     {
+        //         $addFields: {
+        //             returnObject: {
+        //                 $regexFind: { input: { $toLower: "$_id.name" }, regex: { $toLower: tag.name } }
+        //             }
+        //         }
+        //     },
+        //     {
+        //         $match: { returnObject: { $ne: null }, '_id.status': { $eq: 'VERIFIED' } }
+        //     },
+        //     { $skip: 0 },
+        //     { $limit: 10 },
+        //     {
+        //         $project: {
+        //             _id: '$_id._id',
+        //             name: '$_id.name',
+        //             status: '$_id.status',
+        //             createdAt: '$_id.createdAt',
+        //             updatedAt: '$_id.updatedAt',
+        //             count: '$count',
+        //         }
+        //     }
+        // ])
         return _tags
     }
 
