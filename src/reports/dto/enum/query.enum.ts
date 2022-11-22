@@ -10,6 +10,7 @@ export enum OrderEnum  {
 }
 
 export enum FilterEnum  {
+    unVerified= 'UNVERIFIRED',
     verified= "VERIFIED",
     inProgress= "INPROGRESS",
     complete= "COMPLETE",
