@@ -1,5 +1,7 @@
 import { UseGuards } from '@nestjs/common';
 import { Args, Mutation, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
+import { AdminsService } from 'src/admins/admins.service';
+import { Admin } from 'src/admins/models/admin';
 import { CurrentUser } from 'src/auth/current-user.args';
 import { GqlAuthGuard } from 'src/auth/guards/gql-auth.guard';
 import { AvatarsService } from 'src/avatars/avatars.service';
@@ -18,6 +20,7 @@ import { UsersService } from './users.service';
 export class UsersResolver {
     constructor(
         private readonly usersService: UsersService,
+        private readonly adminsService: AdminsService,
         private readonly avatarsService: AvatarsService,
     ) { }
 
@@ -59,7 +62,8 @@ export class UsersResolver {
 
     @Mutation(() => User, { name: 'deleteUserById', nullable: true })
     @UseGuards(GqlAuthGuard)
-    async deleteUser(@Args('deleteUserData') deleteUserData: DeleteUserInput) {
+    async deleteUser(@CurrentUser() admin: Admin, @Args('deleteUserData') deleteUserData: DeleteUserInput) {
+        await this.adminsService.verifyAdminRole(admin._id)
         return this.usersService.deleteUser(deleteUserData)
     }
 }
