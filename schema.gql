@@ -187,7 +187,7 @@ type Query {
 
 type Mutation {
   updateUser(updateUserData: UpdateUserInput!): User
-  updateAvatarUser(updateUserAvatarId: UpdateAvatarUserInput!): User!
+  updateAvatarUser: User!
   deleteUserById(deleteUserData: DeleteUserInput!): User
   registerUser(registerData: CreateUserInput!): AuthUser!
   deleteUser: User!
@@ -208,7 +208,6 @@ type Mutation {
 }
 
 input UpdateUserInput {
-  _id: ID!
   email: String
   emailType: String
   username: String
@@ -217,10 +216,6 @@ input UpdateUserInput {
   phone: String
   role: String
   isBannned: Boolean
-}
-
-input UpdateAvatarUserInput {
-  avatarId: ID!
 }
 
 input DeleteUserInput {
