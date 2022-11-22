@@ -11,36 +11,37 @@ import { CreateUserInput } from "src/users/dto/inputs/create-user.input";
 import { AuthUserService } from "./auth.service.user";
 import { Avatar } from "src/avatars/models/avatar";
 import { AvatarsService } from "src/avatars/avatars.service";
+import { Admin } from "src/admins/models/admin";
 
 @Resolver(() => AuthUser)
 export class AuthUserResolver {
     constructor(
-        private readonly authService: AuthUserService,
+        private readonly authUserService: AuthUserService,
         private readonly usersService: UsersService,
         private readonly avatarsService: AvatarsService,
     ) { }
 
     @Query(() => AuthUser)
     async loginUser(@Args() loginAuthArgs: LoginAuthArgs): Promise<AuthUser> {
-        return this.authService.login(loginAuthArgs)
+        return this.authUserService.login(loginAuthArgs)
     }
 
     @Query(() => AuthUser)
     @UseGuards(GqlAuthGuard)
     async getMeUser(@CurrentUser() user: User) {
-        return this.authService.getMe(user.email)
+        return this.authUserService.getMeUser(user.email)
     }
 
     @Query(() => AuthUser)
     @UseGuards(GqlAuthGuard)
     async rePasswordUser(@CurrentUser() user: User, @Args() rePasswordAuthArgs: RePasswordAuthArgs) {
-        return this.authService.rePassword(user, rePasswordAuthArgs)
+        return this.authUserService.rePassword(user, rePasswordAuthArgs)
     }
 
     @Mutation(() => AuthUser)
     // @UseGuards(GqlAuthGuard)
     async registerUser(@Args('registerData') registerData: CreateUserInput): Promise<User> {
-        return this.authService.register(registerData)
+        return this.authUserService.register(registerData)
     }
 
     @Mutation(() => User, {name: 'deleteUser'})

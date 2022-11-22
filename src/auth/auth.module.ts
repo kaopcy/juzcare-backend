@@ -10,6 +10,7 @@ import { Avatar, AvatarSchema } from 'src/avatars/models/avatar';
 import { User, UserSchema } from 'src/users/models/user';
 import { UsersModule } from 'src/users/users.module';
 import { UsersService } from 'src/users/users.service';
+import { AuthResolver } from './auth.resolve';
 import { AuthAdminResolver } from './auth.resolve.admin';
 import { AuthUserResolver } from './auth.resolver.user';
 import { AuthAdminService } from './auth.service.admin';
@@ -37,6 +38,6 @@ import { JwtStrategy } from './strategies/jwt.strategy';
 
   ],
   controllers: [],
-  providers: [AuthUserService, UsersService, JwtStrategy, AuthUserResolver, AdminsService, AuthAdminResolver, AuthAdminService, AvatarsService]
+  providers: [AuthUserService, UsersService, JwtStrategy, AuthUserResolver, AdminsService, AuthAdminResolver, AuthAdminService, AvatarsService, AuthResolver]
 })
 export class AuthModule { }
