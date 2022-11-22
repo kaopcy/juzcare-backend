@@ -5,7 +5,7 @@ import { Admin } from "src/admins/models/admin";
 import { AvatarsService } from "src/avatars/avatars.service";
 import { User } from "src/users/models/user";
 import { UsersService } from "src/users/users.service";
-import { AuthUserService } from "./auth.service.user";
+import { AuthService } from "./auth.service";
 import { CurrentUser } from "./current-user.args";
 import { GqlAuthGuard } from "./guards/gql-auth.guard";
 import { AuthUser } from "./models/authuser";
@@ -16,6 +16,7 @@ export class AuthResolver {
         private readonly usersService: UsersService,
         private readonly adminsService: AdminsService,
         private readonly avatarsService: AvatarsService,
+        private readonly authService: AuthService
     ) { }
 
     @Query(() => AuthUser)
@@ -23,12 +24,14 @@ export class AuthResolver {
     async getMe(@CurrentUser() account: Admin | User) {
         const user = await this.usersService.getUserByEmail(account.email)
         if (user) {
-            return user
+            const token = await this.authService.generateToken(user)
+            return {...user, accessToken: token}
         }
         
         const admin = await this.adminsService.getAdminByEmail(account.email)
         if (admin) {
-            return { ...{ ...({ ...admin }['_doc'])}, emailType: "", avatar: (await this.avatarsService.getAllAvatars())[0], isBanned: false, phone: "", role: "", username: "" } as unknown as AuthUser
+            const token = await this.authService.generateToken(admin)
+            return { ...{ ...({ ...admin }['_doc'])}, emailType: "", avatar: (await this.avatarsService.getAllAvatars())[0], isBanned: false, phone: "", role: "", username: "", accessToken: token } as unknown as AuthUser
         }
         return null
     }
