@@ -9,17 +9,25 @@ import { AuthAdminService } from "./auth.service.admin";
 import { Admin } from "src/admins/models/admin";
 import { AdminsService } from "src/admins/admins.service";
 import { CreateAdminInput } from "src/admins/dto/inputs/create-admin.input";
+import { AuthUser } from "./models/authuser";
+import { Avatar } from "src/avatars/models/avatar";
+import { AvatarsService } from "src/avatars/avatars.service";
 
 @Resolver(() => AuthAdmin)
 export class AuthAdminResolver {
     constructor(
         private readonly authService: AuthAdminService,
         private readonly adminsService: AdminsService,
+        private readonly avatarsService: AvatarsService,
     ) { }
 
-    @Query(() => AuthAdmin)
-    async loginAdmin(@Args() loginAuthArgs: LoginAuthArgs): Promise<AuthAdmin> {
-        return this.authService.login(loginAuthArgs)
+    @Query(() => AuthUser)
+    async loginAdmin(@Args() loginAuthArgs: LoginAuthArgs): Promise<AuthUser> {
+        // const {} = new User()
+        const admin = await this.authService.login(loginAuthArgs)
+        console.log();
+        
+        return { ...admin, emailType: "", avatar: (await this.avatarsService.getAllAvatars())[0], isBanned: "", phone: "", role: "", username: "" } as unknown as AuthUser
     }
 
     @Query(() => AuthAdmin)
