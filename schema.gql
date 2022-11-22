@@ -168,7 +168,7 @@ type Query {
   loginUser(email: String!, password: String!): AuthUser!
   getMeUser: AuthUser!
   rePasswordUser(oldPassword: String!, newPassword: String!): AuthUser!
-  loginAdmin(email: String!, password: String!): AuthAdmin!
+  loginAdmin(email: String!, password: String!): AuthUser!
   getMeAdmin: AuthAdmin!
   admin(_id: String!): Admin
   report(_id: String!): Report
