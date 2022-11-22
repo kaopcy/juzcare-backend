@@ -19,6 +19,9 @@ export class NotificationService {
     // const { isWatch, userId } = createNotificationData
     // let _detail: string;
     const { user, report, type } = createNotificationData
+    if (user._id.toString() === report._id.toString()) {
+      return
+    }
     // if (createNotificationData.type === 'UPVOTE') {
     //   _detail = `คุณ ${user.firstName} ${lastName}: เห็นด้วยกับการรายงาน "${title}" ของคุณ `;
     // } else if (createNotificationData.type === 'COMMENT') {

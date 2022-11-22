@@ -52,8 +52,9 @@ export class UsersResolver {
 
     @Mutation(()=>User)
     @UseGuards(GqlAuthGuard)
-    async updateAvatarUser(@CurrentUser() user: User, @Args('updateUserAvatarId') updateAvatarUserData: UpdateAvatarUserInput):Promise<User> {
-        return this.usersService.updateAvatarUser(user, updateAvatarUserData.avatarId)
+    async updateAvatarUser(@CurrentUser() user: User):Promise<User> {
+        const avatar = await this.avatarsService.randomAvatar()
+        return this.usersService.updateAvatarUser(user, avatar._id.toString())
     }
 
     @Mutation(() => User, { name: 'deleteUserById', nullable: true })
