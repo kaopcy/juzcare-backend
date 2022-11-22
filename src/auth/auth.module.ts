@@ -13,6 +13,7 @@ import { UsersService } from 'src/users/users.service';
 import { AuthResolver } from './auth.resolve';
 import { AuthAdminResolver } from './auth.resolve.admin';
 import { AuthUserResolver } from './auth.resolver.user';
+import { AuthService } from './auth.service';
 import { AuthAdminService } from './auth.service.admin';
 import { AuthUserService } from './auth.service.user';
 import { JwtStrategy } from './strategies/jwt.strategy';
@@ -38,6 +39,6 @@ import { JwtStrategy } from './strategies/jwt.strategy';
 
   ],
   controllers: [],
-  providers: [AuthUserService, UsersService, JwtStrategy, AuthUserResolver, AdminsService, AuthAdminResolver, AuthAdminService, AvatarsService, AuthResolver]
+  providers: [AuthUserService, UsersService, JwtStrategy, AuthUserResolver, AdminsService, AuthAdminResolver, AuthAdminService, AvatarsService, AuthResolver, AuthService]
 })
 export class AuthModule { }

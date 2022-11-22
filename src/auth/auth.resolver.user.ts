@@ -11,7 +11,6 @@ import { CreateUserInput } from "src/users/dto/inputs/create-user.input";
 import { AuthUserService } from "./auth.service.user";
 import { Avatar } from "src/avatars/models/avatar";
 import { AvatarsService } from "src/avatars/avatars.service";
-import { Admin } from "src/admins/models/admin";
 
 @Resolver(() => AuthUser)
 export class AuthUserResolver {

@@ -2,12 +2,10 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { LoginAuthArgs } from './dto/args/login-auth.args';
-import { CreateUserInput } from 'src/users/dto/inputs/create-user.input';
 import { AdminsService } from 'src/admins/admins.service';
 import { Admin } from 'src/admins/models/admin';
 import { AuthAdmin } from './models/authadmin';
 import { CreateAdminInput } from 'src/admins/dto/inputs/create-admin.input';
-import { UsersService } from 'src/users/users.service';
 
 
 @Injectable()
