@@ -24,6 +24,7 @@ import { Notification, NotificationSchema } from 'src/notification/models/notifi
 import { Trend, TrendSchema } from 'src/trends/models/trend';
 import { TrendsService } from 'src/trends/trends.service';
 import { ScheduleModule } from '@nestjs/schedule';
+import { CreateReportFacade } from './report-facade/create-report.facade';
 
 @Module({
   imports: [
@@ -55,6 +56,7 @@ import { ScheduleModule } from '@nestjs/schedule';
     ReviewResolver,
     NotificationService,
     TrendsService,
+    CreateReportFacade
   ],
 })
 export class ReportsModule { }
