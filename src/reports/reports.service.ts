@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import mongoose, { Model } from 'mongoose';
+import { Model } from 'mongoose';
 import { Admin } from 'src/admins/models/admin';
 import { CommentsService } from 'src/comments/comments.service';
 import { CreateCommentInput } from 'src/comments/dto/inputs/create-comment.input';
@@ -17,14 +17,13 @@ import { Report, ReportDocument } from './models/report';
 import { TrendsService } from 'src/trends/trends.service';
 import { Cron } from '@nestjs/schedule';
 import { GetReportsArgs } from './dto/args/get-reports.args';
-import { OrderEnum, SortEnum } from './dto/enum/query.enum';
-import { length, project } from './dto/pipeline/aggregate.pipeline';
 import { PaginateReport } from './models/paginate.report';
 import { GetPopularTagsArgs } from './dto/args/get-popular-tags.args';
 import { DeleteReportInput } from './dto/inputs/delete-report.input';
 import { NotifyTypeEnum } from 'src/notification/dto/enum/notify.enum';
 import { ReportsAggregateBuilder } from './aggregate-builder/reports-aggregate-builder';
 import { AggregateDirector } from './aggregate-builder/aggregate-director';
+import { CreateReportFacade } from './report-facade/create-report.facade';
 
 @Injectable()
 export class ReportsService {
@@ -33,42 +32,43 @@ export class ReportsService {
         private readonly reportModel: Model<ReportDocument>,
         private readonly mediasService: MediasService,
         private readonly commentsService: CommentsService,
-        private readonly tagsService: TagsService,
         private readonly progressesService: ProgressesService,
         private readonly notificationService: NotificationService,
         private readonly trendsService: TrendsService,
+        private readonly createReportFacade: CreateReportFacade,
     ) { }
 
     private readonly logger = new Logger(ReportsService.name);
 
     async createReport(user: User, reportData: CreateReportInput,): Promise<Report> {
-        const _medias = [];
-        if (reportData.medias?.length) {
-            for (const m of reportData.medias) {
-                const media = await this.mediasService.createMedia(m);
-                _medias.push(media._id);
-            }
-        }
-        reportData.medias = _medias;
+        const _reportData = await this.createReportFacade.operation(reportData)
+        // const _medias = [];
+        // if (reportData.medias?.length) {
+        //     for (const m of reportData.medias) {
+        //         const media = await this.mediasService.createMedia(m);
+        //         _medias.push(media._id);
+        //     }
+        // }
+        // reportData.medias = _medias;
 
-        const _tags = [];
+        // const _tags = [];
 
-        if (reportData.tags.length) {
-            for (const tag of reportData.tags) {
-                // console.log(tag, !mongoose.Types.ObjectId.isValid(tag));
-                if (!mongoose.Types.ObjectId.isValid(tag)) {
-                    const _tag = await this.tagsService.createTag({ name: tag })
-                    _tags.push(_tag._id.toString());
-                } else {
-                    _tags.push(tag);
-                }
-            }
-            reportData.tags = _tags;
-        }
+        // if (reportData.tags.length) {
+        //     for (const tag of reportData.tags) {
+        //         // console.log(tag, !mongoose.Types.ObjectId.isValid(tag));
+        //         if (!mongoose.Types.ObjectId.isValid(tag)) {
+        //             const _tag = await this.tagsService.createTag({ name: tag })
+        //             _tags.push(_tag._id.toString());
+        //         } else {
+        //             _tags.push(tag);
+        //         }
+        //     }
+        //     reportData.tags = _tags;
+        // }
 
         const _report = {
             ...{ user: user._id.toString() },
-            ...reportData,
+            ..._reportData,
             status: {},
             review: {},
         };

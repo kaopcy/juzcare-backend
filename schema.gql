@@ -102,17 +102,17 @@ type Progress {
   updatedAt: DateTime!
 }
 
-type Tag {
-  _id: ID!
+type Location {
+  _id: String!
   name: String!
-  status: String!
   createdAt: DateTime!
   updatedAt: DateTime!
 }
 
-type Location {
-  _id: String!
+type Tag {
+  _id: ID!
   name: String!
+  status: String!
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -165,6 +165,7 @@ type AggregateTags {
 type Query {
   user(_id: String!): User
   users(_ids: [String!]!): [User!]
+  getAllUsers: [User!]
   loginUser(email: String!, password: String!): AuthUser!
   getMeUser: AuthUser!
   rePasswordUser(oldPassword: String!, newPassword: String!): AuthUser!

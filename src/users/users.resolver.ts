@@ -33,6 +33,12 @@ export class UsersResolver {
         return this.usersService.getUsers(getUsersArgs)
     }
 
+    @Query(() => [User], { nullable: true })
+    @UseGuards(GqlAuthGuard)
+    async getAllUsers(): Promise<User[]> {
+        return this.usersService.getAllUsers()
+    }
+
     // @Mutation(() => User)
     // @UseGuards(GqlAuthGuard)
     // async createUser(@Args('createUserData') createUserData: CreateUserInput): Promise<User> {

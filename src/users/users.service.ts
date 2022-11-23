@@ -50,6 +50,10 @@ export class UsersService {
         return this.userModel.find({ _id: { $in: getUsersArgs._ids } })
     }
 
+    public async getAllUsers(): Promise<User[]> {
+        return await this.userModel.find({})
+    }
+
     public async getUserByEmail(email: string): Promise<User | null> {
         const user = await this.userModel.findOne({ email: email })
         if (!user) {
