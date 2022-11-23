@@ -25,9 +25,9 @@ export class AuthService {
         return accessToken
     }
 
-    public createAuthUser(user: User): Promise<AuthUser | null> {
-        const accessToken = this.generateToken(user)
-        return { ...({ ...user }['_doc']), accessToken }
+    public createAuthUser(account: User | Admin): Promise<AuthUser | null> {
+        const accessToken = this.generateToken(account)
+        return { ...({ ...account }['_doc']), accessToken }
     }
 
 }
