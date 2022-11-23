@@ -203,6 +203,7 @@ export class ReportsService {
     async getTrends(): Promise<Report[]> {
         const _reports = (await this.trendsService.getTrends())['reports']
         const reports = []
+        if (_reports.length === 0) this.updateTrends(); 
         for (const report of _reports) {
             reports.push(await this.reportModel.findById(report._id))
         }
