@@ -51,6 +51,8 @@ export class AuthUserResolver {
 
     @ResolveField(() => Avatar, { nullable: true })
     async avatar(@Parent() authUser: AuthUser): Promise<Avatar> {
+        console.log(authUser);
+        
         return await this.avatarsService.getAvatar({_id: authUser.avatar._id})
     }
 
