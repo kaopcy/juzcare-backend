@@ -201,10 +201,13 @@ export class ReportsService {
     }
 
     async getTrends(): Promise<Report[]> {
-        const _reports = (await this.trendsService.getTrends())['reports']
+        let _reports = await this.trendsService.getTrends()
+        if (_reports === null) {
+            await this.updateTrends();
+            _reports = await this.trendsService.getTrends()
+        }
         const reports = []
-        if (_reports.length === 0) this.updateTrends(); 
-        for (const report of _reports) {
+        for (const report of _reports['reports']) {
             reports.push(await this.reportModel.findById(report._id))
         }
         return reports
