@@ -4,5 +4,5 @@ COPY package*.json /juzcare-backend/dev/
 RUN npm install
 COPY ./ /juzcare-backend/dev/
 RUN npm run build
-EXPOSE 3006
+EXPOSE 4000
 CMD ["node", "dist/main"]
