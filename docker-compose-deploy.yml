@@ -6,6 +6,17 @@ services:
       context: .
     image: "juzcare/dev"
     ports:
-      - "6003:3006"
+      - "6003:4000"
     volumes:
       - "./build:/juzcare-backend/dev/build"
+  
+  mongodb:
+    image: docker.io/bitnami/mongodb:6.0
+    ports:
+      - "27020:27017"
+    volumes:
+      - 'mongodb_data:/bitnami/mongodb'
+
+volumes:
+  mongodb_data:
+    driver: local
